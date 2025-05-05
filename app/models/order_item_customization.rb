@@ -1,0 +1,2 @@
+class OrderItemCustomization < ApplicationRecord
+end
