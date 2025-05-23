@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_16_231019) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_23_145300) do
   create_table "categories", force: :cascade do |t|
     t.string "name", limit: 25, null: false
     t.string "description", limit: 200
@@ -103,7 +103,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_231019) do
     t.string "username", limit: 25, null: false
     t.string "email", limit: 25, null: false
     t.string "phone", limit: 20
-    t.string "password", limit: 25, null: false
+    t.string "password_digest", limit: 25, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "admin", default: false, null: false
