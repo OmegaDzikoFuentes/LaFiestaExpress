@@ -1,0 +1,148 @@
+<div class="min-h-screen py-8">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <div class="flex justify-between items-start mb-8">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">Order #<%= @order.id %></h1>
+          <p class="text-gray-600">
+            <i class="fas fa-calendar mr-2"></i>
+            <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+          </p>
+          <div class="mt-2">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+              <%= case @order.status
+                  when 'cart' then 'bg-yellow-100 text-yellow-800'
+                  when 'placed' then 'bg-blue-100 text-blue-800'
+                  when 'preparing' then 'bg-orange-100 text-orange-800'
+                  when 'ready' then 'bg-green-100 text-green-800'
+                  when 'completed' then 'bg-gray-100 text-gray-800'
+                  else 'bg-gray-100 text-gray-800'
+                  end %>">
+              <%= @order.status.titleize %>
+            </span>
+          </div>
+        </div>
+
+        <% if @order.status == 'cart' %>
+          <%= link_to "Continue Shopping", categories_path, 
+              class: "bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors mr-2" %>
+          <%= link_to "Checkout", checkout_order_path(@order), 
+              class: "bg-mexican text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors" %>
+        <% end %>
+      </div>
+
+      <!-- Order Items -->
+      <div class="space-y-4 mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Order Items</h2>
+        
+        <% if @order_items.any? %>
+          <% @order_items.each do |item| %>
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <h3 class="font-semibold text-gray-800"><%= item.item_name %></h3>
+                  <p class="text-gray-600 text-sm">$<%= sprintf("%.2f", item.item_price) %> each</p>
+                  
+                  <!-- Customizations -->
+                  <% if item.order_item_customizations.any? %>
+                    <div class="mt-2">
+                      <p class="text-sm text-gray-600 font-medium">Customizations:</p>
+                      <ul class="text-sm text-gray-600 ml-4">
+                        <% item.order_item_customizations.each do |customization| %>
+                          <li>
+                            • <%= customization.customization_name %>
+                            <% if customization.price_adjustment != 0 %>
+                              (<%= customization.price_adjustment > 0 ? "+" : "" %>$<%= sprintf("%.2f", customization.price_adjustment) %>)
+                            <% end %>
+                          </li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  <% end %>
+                  
+                  <!-- Special Requests -->
+                  <% if item.special_request.present? %>
+                    <div class="mt-2">
+                      <p class="text-sm text-gray-600 font-medium">Special Request:</p>
+                      <p class="text-sm text-gray-600 italic"><%= item.special_request %></p>
+                    </div>
+                  <% end %>
+                </div>
+
+                <div class="text-right ml-4">
+                  <% if @order.status == 'cart' %>
+                    <%= form_with model: item, url: order_item_path(item), method: :patch, local: true, class: "inline-block mr-2" do |f| %>
+                      <%= f.number_field :quantity, value: item.quantity, min: 1, max: 10, 
+                          onchange: "this.form.submit()",
+                          class: "w-16 px-2 py-1 border border-gray-300 rounded text-center" %>
+                    <% end %>
+                    <%= link_to order_item_path(item), method: :delete, 
+                        data: { confirm: "Remove this item?" },
+                        class: "text-red-600 hover:text-red-800 ml-2" do %>
+                      <i class="fas fa-trash"></i>
+                    <% end %>
+                  <% else %>
+                    <span class="text-gray-600">Qty: <%= item.quantity %></span>
+                  <% end %>
+                  
+                  <div class="font-semibold text-gray-800 mt-1">
+                    $<%= sprintf("%.2f", (item.item_price + item.order_item_customizations.sum { |c| c.price_adjustment || 0 }) * item.quantity) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="text-center py-8">
+            <i class="fas fa-shopping-cart text-4xl text-gray-400 mb-4"></i>
+            <p class="text-gray-600">Your cart is empty</p>
+            <%= link_to "Browse Menu", categories_path, 
+                class: "mt-4 inline-block bg-mexican text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors" %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Order Summary -->
+      <% if @order_items.any? %>
+        <div class="border-t pt-6">
+          <div class="bg-gray-50 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Order Summary</h3>
+            
+            <div class="space-y-2">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Subtotal:</span>
+                <span class="text-gray-800">$<%= sprintf("%.2f", @order.subtotal || 0) %></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Tax:</span>
+                <span class="text-gray-800">$<%= sprintf("%.2f", @order.tax || 0) %></span>
+              </div>
+              <div class="flex justify-between text-lg font-bold border-t pt-2">
+                <span>Total:</span>
+                <span class="text-mexican">$<%= sprintf("%.2f", @order.total_amount || 0) %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Contact Information (for placed orders) -->
+      <% if @order.status != 'cart' && @order.contact_name.present? %>
+        <div class="border-t pt-6 mt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Contact Information</h3>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <p><strong>Name:</strong> <%= @order.contact_name %></p>
+            <p><strong>Email:</strong> <%= @order.contact_email %></p>
+            <p><strong>Phone:</strong> <%= @order.contact_phone %></p>
+            <% if @order.pickup_time.present? %>
+              <p><strong>Pickup Time:</strong> <%= @order.pickup_time.strftime("%B %d, %Y at %I:%M %p") %></p>
+            <% end %>
+            <% if @order.special_instructions.present? %>
+              <p><strong>Special Instructions:</strong> <%= @order.special_instructions %></p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
