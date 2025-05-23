@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_23_145300) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_23_190823) do
   create_table "categories", force: :cascade do |t|
     t.string "name", limit: 25, null: false
     t.string "description", limit: 200
@@ -86,7 +86,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_23_145300) do
     t.string "phone", limit: 20
     t.string "email", limit: 100
     t.string "logo_url", limit: 225
-    t.string "mondaay_hours", limit: 50
+    t.string "monday_hours", limit: 50
     t.string "tuesday_hours", limit: 20
     t.string "wednesday_hours", limit: 20
     t.string "thursday_hours", limit: 20

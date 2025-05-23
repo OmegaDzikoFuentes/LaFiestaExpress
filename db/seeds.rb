@@ -29,139 +29,158 @@ resto = RestaurantInfo.create!(
   sunday_hours:    "11:00 AM – 6:00 PM"
 )
 
-# — Categories
-entrees = Category.create!(name: "Entrees",   description: "Our signature main dishes")
-sides   = Category.create!(name: "Sides",     description: "Add-ons & extras")
-drinks  = Category.create!(name: "Beverages", description: "Cold drinks & aguas frescas")
+# Clear existing data
+Customization.delete_all
+MenuItem.delete_all
+Category.delete_all
 
-# — Menu Items
-burrito = MenuItem.create!(
-  name:        "Burritos",
-  description: "Choice of meat | beans | rice | salsa | cheese | sour cream",
-  price:       6.99,
-  image_url:   "https://example.com/images/burrito.jpg",
-  category:    entrees
-)
-
-torta = MenuItem.create!(
-  name:        "Tortas",
-  description: "Mexican sandwich | choice of meat | lettuce | tomatoes | onions | cheese | sour cream",
-  price:       6.99,
-  category:    entrees
-)
-
-quesadilla = MenuItem.create!(
-  name:        "Quesadilla",
-  description: " "12" flour tortilla | cheese | choice of meat | lettuce | tomatoes | sour cream",
-  price:       5.49,
-  category:    entrees
-)
-
-tacos = MenuItem.create!(
-  name:        "Tacos",
-  description: "Hard or soft shells | choice of meat | lettuce | tomatoes | cheese",
-  price:       2.49,
-  category:    entrees
-)
-
-bowl = MenuItem.create!(
-  name:        "Bola (Burrito Bowl)",
-  description: "Burrito in a bowl | choice of meat | beans | salsa | rice | cheese | sour cream",
-  price:       6.99,
-  category:    entrees
-)
-
-nachos = MenuItem.create!(
-  name:        "Nachos",
-  description: "Corn chips | choice of meat | beans | cheese | sour cream | lettuce | tomatoes",
-  price:       5.99,
-  category:    entrees
-)
-
-fiesta_salad = MenuItem.create!(
-  name:        "Fiesta Salad",
-  description: "Romaine & iceberg | choice of meat | beans | pico de gallo | cheese | sour cream | dressing",
-  price:       6.99,
-  category:    entrees
-)
-
-refresco = MenuItem.create!(
-  name:        "Refresco (Soft Drink)",
-  description: "Bottled soda",
-  price:       2.25,
-  category:    drinks
-)
-
-horchata = MenuItem.create!(
-  name:        "Horchata (Rice Water)",
-  description: "Traditional sweet rice drink",
-  price:       2.25,
-  category:    drinks
-)
-
-# — Sides & Extras
-rice = MenuItem.create!(
-  name:        "Mexican Rice",
-  description: "Authentic seasoned rice",
-  price:       1.75,
-  category:    sides
-)
-
-white_rice = MenuItem.create!(
-  name:        "White Rice",
-  description: "Plain steamed white rice",
-  price:       1.75,
-  category:    sides
-)
-
-beans = MenuItem.create!(
-  name:        "Beans (your choice)",
-  description: "Black or pinto beans",
-  price:       1.75,
-  category:    sides
-)
-
-# — Customizations (applied to Entrees)
-meats = %w[Barbacoa Carne\ Asada Al\ Pastor Carnitas Pollo Carne\ Molida]
-entree_items = [burrito, tacos, bowl, fiesta_salad, torta, quesadilla, nachos]
-
-entree_items.each do |item|
-  meats.each do |meat|
-    Customization.create!(
-      menu_item:        item,
-      name:             meat,
-      price_adjustment: 0.30
-    )
-  end
-end
-
-# Extras
-extras = {
-  "Extra cheese" => 0.99,
-  "Jalapeños"    => 0.75,
-  "Sour cream"   => 0.99,
-  "Avocado"      => 1.45,
-  "Guacamole"    => 1.45
+# Create Categories
+categories = {
+  "Tacos" => "Traditional Mexican tacos with various fillings.",
+  "Burritos" => "Large flour tortillas filled with your choice of ingredients.",
+  "Quesadillas" => "Grilled tortillas with melted cheese and optional fillings.",
+  "Nachos" => "Crispy tortilla chips topped with cheese and other toppings.",
+  "Sides" => "Complementary side dishes.",
+  "Drinks" => "Refreshing beverages.",
+  "Kids Meals" => "Smaller portions for children."
 }
 
-entree_items.each do |item|
-  extras.each do |extra_name, price|
-    Customization.create!(
-      menu_item:        item,
-      name:             extra_name,
-      price_adjustment: price
-    )
-  end
+category_records = {}
+categories.each do |name, description|
+  category_records[name] = Category.create!(
+    name: name,
+    description: description,
+    image_url: nil
+  )
 end
 
-# — Create a demo user
-User.create!(
-  first_name: "Demo",
-  last_name:  "Customer",
-  username:   "demo_user",
-  email:      "demo@lafiesta.com",
-  phone:      "937-000-0000",
-  password_digest: BCrypt::Password.create("password")  
-)
+# Create Menu Items
+menu_items = [
+  {
+    name: "Birria Taco",
+    description: "Slow-cooked beef birria taco served with consommé.",
+    price: 4.75,
+    category: category_records["Tacos"]
+  },
+  {
+    name: "Street Taco",
+    description: "Authentic Mexican street taco with your choice of meat.",
+    price: 3.50,
+    category: category_records["Tacos"]
+  },
+  {
+    name: "Drunken Burrito",
+    description: "Burrito smothered in our special sauce.",
+    price: 9.50,
+    category: category_records["Burritos"]
+  },
+  {
+    name: "Quesadilla",
+    description: "Grilled tortilla with melted cheese and optional fillings.",
+    price: 9.00,
+    category: category_records["Quesadillas"]
+  },
+  {
+    name: "Bola",
+    description: "A delicious mix of meats and toppings wrapped in a tortilla.",
+    price: 11.50,
+    category: category_records["Burritos"]
+  },
+  {
+    name: "Chips with Cheese Dip",
+    description: "Crispy tortilla chips served with warm cheese dip.",
+    price: 4.50,
+    category: category_records["Nachos"]
+  },
+  {
+    name: "Chips with Salsa",
+    description: "Crispy tortilla chips served with fresh salsa.",
+    price: 2.50,
+    category: category_records["Nachos"]
+  },
+  {
+    name: "Chips with Salsa and Cheese Dip",
+    description: "Crispy tortilla chips served with both salsa and cheese dip.",
+    price: 5.50,
+    category: category_records["Nachos"]
+  },
+  {
+    name: "Bag of Chips",
+    description: "A bag of our crispy tortilla chips.",
+    price: 2.00,
+    category: category_records["Sides"]
+  },
+  {
+    name: "Horchata",
+    description: "Traditional Mexican rice water drink.",
+    price: 2.25,
+    category: category_records["Drinks"]
+  },
+  {
+    name: "Ground Beef Taco (Kids)",
+    description: "Kid-sized ground beef taco.",
+    price: 3.25,
+    category: category_records["Kids Meals"]
+  },
+  {
+    name: "Cheese Quesadilla (Kids)",
+    description: "Kid-sized cheese quesadilla.",
+    price: 3.25,
+    category: category_records["Kids Meals"]
+  },
+  {
+    name: "Ground Beef Mini Burrito (Kids)",
+    description: "Kid-sized ground beef burrito.",
+    price: 3.25,
+    category: category_records["Kids Meals"]
+  }
+]
 
-puts "✅ Seed data loaded successfully!"
+menu_item_records = {}
+menu_items.each do |item|
+  menu_item_records[item[:name]] = MenuItem.create!(
+    name: item[:name],
+    description: item[:description],
+    price: item[:price],
+    category: item[:category],
+    image_url: nil
+  )
+end
+
+# Create Customizations
+customizations = [
+  {
+    menu_item: menu_item_records["Birria Taco"],
+    name: "Extra Cheese",
+    price_adjustment: 0.99
+  },
+  {
+    menu_item: menu_item_records["Street Taco"],
+    name: "Add Guacamole",
+    price_adjustment: 1.45
+  },
+  {
+    menu_item: menu_item_records["Drunken Burrito"],
+    name: "Add Sour Cream",
+    price_adjustment: 0.99
+  },
+  {
+    menu_item: menu_item_records["Quesadilla"],
+    name: "Add Jalapeños",
+    price_adjustment: 0.75
+  },
+  {
+    menu_item: menu_item_records["Bola"],
+    name: "Add Avocado",
+    price_adjustment: 1.45
+  }
+]
+
+customizations.each do |customization|
+  Customization.create!(
+    menu_item: customization[:menu_item],
+    name: customization[:name],
+    price_adjustment: customization[:price_adjustment],
+    is_default: false
+  )
+end
