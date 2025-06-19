@@ -4,7 +4,9 @@ class CategoriesController < ApplicationController
     before_action :set_category, only: [:show, :edit, :update, :destroy]
   
     def index
+      @banner_photos = BannerPhoto.all
       @categories = Category.all.order(:name)
+      @restaurant_info = RestaurantInfo.first
     end
   
     def show

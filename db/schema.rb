@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_23_190823) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_17_185712) do
+  create_table "banner_photos", force: :cascade do |t|
+    t.string "image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "name", limit: 25, null: false
     t.string "description", limit: 200

@@ -35,11 +35,10 @@
         <div class="flex justify-between items-center h-16">
           <!-- Logo -->
           <div class="flex items-center">
-            <%= link_to root_path, class: "flex items-center" do %>
-              <i class="fas fa-pepper-hot text-mexican text-2xl mr-2"></i>
-              <span class="text-xl font-bold text-gray-800">La Fiesta Express</span>
-            <% end %>
-          </div>
+  <%= link_to root_path, class: "flex items-center" do %>
+    <%= image_tag "xpresslogo.jpeg", alt: "La Fiesta Express Logo", class: "h-10 w-auto mr-2" %>
+  <% end %>
+</div>
 
           <!-- Navigation Links -->
           <div class="hidden md:flex items-center space-x-6">
@@ -103,23 +102,59 @@
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white mt-16">
-      <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 class="text-lg font-semibold mb-4">La Fiesta Express</h3>
-            <p class="text-gray-300">Authentic Mexican cuisine made with love and tradition.</p>
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold mb-4">Contact</h3>
-            <p class="text-gray-300">📧 info@lafiestaexpress.com</p>
-            <p class="text-gray-300">📞 (555) 123-4567</p>
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold mb-4">Hours</h3>
-            <p class="text-gray-300">Mon-Sun: 11AM - 10PM</p>
-          </div>
-        </div>
+  <div class="max-w-7xl mx-auto px-4 py-10 space-y-8">
+    
+    <!-- Brand / Description -->
+    <div>
+      <h3 class="text-2xl font-semibold mb-2">La Fiesta Express</h3>
+      <p class="text-gray-300">Authentic Mexican cuisine made with love and tradition.</p>
+    </div>
+
+    <!-- Info Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center text-gray-300">
+      
+      <!-- Location -->
+      <div class="flex flex-col items-center">
+        <i class="fas fa-map-marker-alt text-red-500 text-3xl mb-2"></i>
+        <p class="font-semibold text-white">Location</p>
+        <p class="text-gray-400">
+          <% if @restaurant_info %>
+            <%= @restaurant_info.street %>, <%= @restaurant_info.city %>, <%= @restaurant_info.state %> <%= @restaurant_info.zip_code %>
+          <% else %>
+            1133 West Main Street, Troy, OH
+          <% end %>
+        </p>
       </div>
-    </footer>
+
+      <!-- Hours -->
+      <div class="flex flex-col items-center">
+        <i class="fas fa-clock text-red-500 text-3xl mb-2"></i>
+        <p class="font-semibold text-white">Hours Today</p>
+        <p class="text-gray-400">
+          <% if @restaurant_info %>
+            <% 
+              today = Date.current.strftime("%A").downcase
+              hours_method = "#{today}_hours"
+              todays_hours = @restaurant_info.respond_to?(hours_method) ? @restaurant_info.send(hours_method) : nil
+            %>
+            <%= todays_hours || "Call for hours" %>
+          <% else %>
+            11:00 AM – 9:30 PM
+          <% end %>
+        </p>
+      </div>
+
+      <!-- Phone -->
+      <div class="flex flex-col items-center">
+        <i class="fas fa-phone text-red-500 text-3xl mb-2"></i>
+        <p class="font-semibold text-white">Call Us</p>
+        <p class="text-gray-400"><%= @restaurant_info&.phone || "937-703-1371" %></p>
+      </div>
+
+    </div>
+
+  </div>
+</footer>
+
   </body>
 </html>

@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   post "/login", to: "sessions#create"
   delete "/logout", to: "sessions#destroy"
 
-  get "/signup", to: "users#new"
+  get "/signup", to: "users#new", as: :new_user_registration
   post "/signup", to: "users#create"
 
   # For search functionality
