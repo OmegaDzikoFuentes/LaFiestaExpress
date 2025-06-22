@@ -1,0 +1,38 @@
+<div class="loyalty-card-container">
+  <div class="card-content">
+    <div class="vip-text">
+      I'm a VIP Customer at...
+    </div>
+    
+    <div class="restaurant-logo">
+      <div class="restaurant-name">La Fiesta</div>
+      <div class="restaurant-name" style="margin-top: -10px;">EXPRESS</div>
+      <div class="restaurant-subtitle">Fresh Mexican Food</div>
+    </div>
+    
+    <div class="punch-grid">
+      <% (1..9).each do |num| %>
+        <div class="punch-square <%= 'punched' if num <= @loyalty_card.punches_count %>">
+          <%= num %>
+        </div>
+      <% end %>
+      <div class="punch-square reward">
+        $8 OFF
+      </div>
+    </div>
+    
+    <div class="reward-info">
+      <strong>After 10 purchases, get an $8 discount on your next purchase.</strong><br>
+      <small>Applicable to one meal only.</small>
+    </div>
+    
+    <div class="restaurant-info">
+      <strong>1133 W Main St</strong><br>
+      Troy, Ohio 45373 - (937) 703-1371
+    </div>
+    
+    <div class="card-rules">
+      One Punch Per Visit - One Card Per Customer
+    </div>
+  </div>
+</div>

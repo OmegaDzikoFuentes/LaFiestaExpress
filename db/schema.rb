@@ -10,7 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_17_185712) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_22_202545) do
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
   create_table "banner_photos", force: :cascade do |t|
     t.string "image_url"
     t.datetime "created_at", null: false
@@ -33,6 +61,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_185712) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["menu_item_id"], name: "index_customizations_on_menu_item_id"
+  end
+
+  create_table "loyalty_cards", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "punches_count", default: 0, null: false
+    t.decimal "discount_amount", precision: 10, scale: 2, default: "8.0", null: false
+    t.boolean "is_completed", default: false, null: false
+    t.boolean "is_redeemed", default: false, null: false
+    t.datetime "completed_at"
+    t.datetime "redeemed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "is_completed"], name: "index_loyalty_cards_on_user_id_and_is_completed"
+    t.index ["user_id", "is_redeemed"], name: "index_loyalty_cards_on_user_id_and_is_redeemed"
+    t.index ["user_id"], name: "index_loyalty_cards_on_user_id"
+  end
+
+  create_table "loyalty_punches", force: :cascade do |t|
+    t.integer "loyalty_card_id", null: false
+    t.integer "order_id", null: false
+    t.integer "punch_number", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "receipt_upload_id", null: false
+    t.index ["loyalty_card_id", "order_id"], name: "index_loyalty_punches_on_loyalty_card_id_and_order_id", unique: true
+    t.index ["loyalty_card_id"], name: "index_loyalty_punches_on_loyalty_card_id"
+    t.index ["order_id"], name: "index_loyalty_punches_on_order_id"
+    t.index ["punch_number"], name: "index_loyalty_punches_on_punch_number"
+    t.index ["receipt_upload_id"], name: "index_loyalty_punches_on_receipt_upload_id"
   end
 
   create_table "menu_items", force: :cascade do |t|
@@ -83,6 +140,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_185712) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "receipt_uploads", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "loyalty_card_id"
+    t.string "status", default: "pending", null: false
+    t.text "admin_notes"
+    t.datetime "approved_at"
+    t.integer "approved_by_id"
+    t.decimal "receipt_total", precision: 10, scale: 2
+    t.date "receipt_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approved_by_id"], name: "index_receipt_uploads_on_approved_by_id"
+    t.index ["loyalty_card_id"], name: "index_receipt_uploads_on_loyalty_card_id"
+    t.index ["status"], name: "index_receipt_uploads_on_status"
+    t.index ["user_id", "status"], name: "index_receipt_uploads_on_user_id_and_status"
+    t.index ["user_id"], name: "index_receipt_uploads_on_user_id"
+  end
+
   create_table "restaurant_infos", force: :cascade do |t|
     t.string "name", limit: 100
     t.string "street", limit: 100
@@ -115,10 +190,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_185712) do
     t.boolean "admin", default: false, null: false
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "customizations", "menu_items"
+  add_foreign_key "loyalty_cards", "users"
+  add_foreign_key "loyalty_punches", "loyalty_cards"
+  add_foreign_key "loyalty_punches", "orders"
+  add_foreign_key "loyalty_punches", "receipt_uploads"
   add_foreign_key "menu_items", "categories"
   add_foreign_key "order_item_customizations", "order_items"
   add_foreign_key "order_items", "menu_items"
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "users"
+  add_foreign_key "receipt_uploads", "loyalty_cards"
+  add_foreign_key "receipt_uploads", "users"
+  add_foreign_key "receipt_uploads", "users", column: "approved_by_id"
 end

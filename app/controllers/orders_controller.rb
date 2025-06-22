@@ -1,72 +1,107 @@
+# app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
-    before_action :authenticate_user!
-    before_action :set_order, only: [:show, :edit, :update, :destroy, :checkout, :complete]
-    before_action :authorize_order_access!, only: [:show, :edit, :update, :destroy]
+  before_action :require_user_logged_in
+  before_action :set_order, only: [:show, :checkout, :complete, :add_loyalty_punch]
   
-    def index
-      @orders = current_user.orders.order(created_at: :desc)
-    end
+  def index
+    @orders = current_user.orders.includes(:order_items, :menu_items).order(created_at: :desc)
+  end
   
-    def show
-      @order_items = @order.order_items.includes(:menu_item, :order_item_customizations)
-    end
+  def show
+    @order_items = @order.order_items.includes(:menu_item, :customizations)
+  end
   
-    def new
-      @order = current_user.orders.new(
-        order_date: Time.current,
-        status: "cart"
-      )
-      if @order.save
-        redirect_to menu_items_path, notice: "Started a new order. Add items to your cart!"
-      else
-        redirect_to root_path, alert: "Could not create a new order. Please try again."
-      end
-    end
+  def new
+    @order = current_user.orders.build
+  end
   
-    def checkout
-      if @order.order_items.empty?
-        redirect_to menu_items_path, alert: "Your cart is empty! Add items before checkout."
-        return
-      end
-      
-      @order.contact_name = current_user.full_name
-      @order.contact_email = current_user.email
-      @order.contact_phone = current_user.phone
-    end
-  
-    def complete
-      if @order.update(order_params.merge(status: "placed"))
-        session[:order_id] = nil
-        redirect_to @order, notice: "¡Gracias! Your order has been placed successfully."
-      else
-        render :checkout, status: :unprocessable_entity
-      end
-    end
-  
-    def current
-      if session[:order_id] && (order = current_user.orders.find_by(id: session[:order_id], status: "cart"))
-        redirect_to order_path(order)
-      else
-        redirect_to new_order_path
-      end
-    end
-  
-    private
-  
-    def set_order
-      @order = Order.find(params[:id])
-    end
-  
-    def authorize_order_access!
-      unless @order.user_id == current_user.id || current_user.admin?
-        redirect_to root_path, alert: "You are not authorized to access this order."
-      end
-    end
-  
-    def order_params
-      params.require(:order).permit(
-        :contact_name, :contact_phone, :contact_email,
-        :pickup_time, :special_instructions
-      )
+  def create
+    @order = current_user.orders.build(order_params)
+    
+    if @order.save
+      redirect_to @order, notice: 'Order created successfully.'
+    else
+      render :new, status: :unprocessable_entity
     end
   end
+  
+  def checkout
+    # Display checkout form
+    @order.calculate_totals!
+  end
+  
+  def complete
+    if @order.update(status: 'completed', completed_at: Time.current)
+      # Clear current cart items if this was the current order
+      session[:current_order_id] = nil if session[:current_order_id] == @order.id
+      
+      redirect_to @order, notice: 'Order completed successfully!'
+    else
+      render :checkout, status: :unprocessable_entity
+    end
+  end
+  
+  def current
+    @order = current_user.current_order
+    
+    if @order
+      @order_items = @order.order_items.includes(:menu_item, :customizations)
+      render :show
+    else
+      redirect_to menu_items_path, notice: 'Your cart is empty.'
+    end
+  end
+  
+  # NEW: Fixed loyalty punch functionality
+  def add_loyalty_punch
+    unless @order.completed?
+      redirect_to @order, alert: 'Order must be completed to add loyalty punch.'
+      return
+    end
+    
+    loyalty_card = current_user.current_loyalty_card
+    unless loyalty_card
+      redirect_to @order, alert: 'No active loyalty card found.'
+      return
+    end
+    
+    # Check if this order already has a loyalty punch
+    existing_punch = loyalty_card.loyalty_punches.find_by(order: @order)
+    if existing_punch
+      redirect_to @order, alert: 'This order already has a loyalty punch.'
+      return
+    end
+    
+    # For receipt-based system, redirect to upload receipt
+    if params[:with_receipt] == 'true'
+      session[:pending_loyalty_order_id] = @order.id
+      redirect_to new_receipt_upload_path, notice: 'Please upload your receipt to earn your loyalty punch.'
+    else
+      # For automatic punch (if no receipt required)
+      loyalty_punch = loyalty_card.loyalty_punches.create!(
+        user: current_user,
+        order: @order,
+        punched_at: Time.current,
+        is_approved: true  # Auto-approve if no receipt required
+      )
+      
+      # Check if card is now complete
+      if loyalty_card.current_punches >= loyalty_card.max_punches
+        loyalty_card.update!(is_completed: true)
+        redirect_to loyalty_card, notice: 'Loyalty punch added! Your card is now complete and ready to redeem!'
+      else
+        redirect_to @order, notice: "Loyalty punch added! #{loyalty_card.punches_remaining} more to go!"
+      end
+    end
+  end
+  
+  private
+  
+  def set_order
+    @order = current_user.orders.find(params[:id])
+  end
+  
+  def order_params
+    params.require(:order).permit(:notes, :special_instructions)
+  end
+end

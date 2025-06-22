@@ -1,0 +1,19 @@
+<div class="text-center mt-4">
+  <% if @loyalty_card.active? %>
+    <%= button_to add_punch_loyalty_card_path(@loyalty_card), 
+          method: :patch, 
+          class: "punch-btn",
+          id: "punchButton" do %>
+      <i class="fas fa-plus me-2"></i>Add Punch
+    <% end %>
+  <% end %>
+  
+  <% if @loyalty_card.completed? && !@loyalty_card.redeemed? %>
+    <%= button_to redeem_loyalty_card_path(@loyalty_card), 
+          method: :patch, 
+          class: "redeem-btn",
+          id: "redeemButton" do %>
+      <i class="fas fa-gift me-2"></i>Redeem $8 Reward
+    <% end %>
+  <% end %>
+</div>

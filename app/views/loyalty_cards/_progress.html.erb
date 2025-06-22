@@ -1,0 +1,17 @@
+<div class="mt-4 p-3 bg-white rounded shadow-sm">
+  <h6><i class="fas fa-chart-line me-2 text-primary"></i>Progress Summary</h6>
+  <div class="row text-center">
+    <div class="col-4">
+      <div class="h4 text-success mb-0"><%= @loyalty_card.punches_count %></div>
+      <small class="text-muted">Punches</small>
+    </div>
+    <div class="col-4">
+      <div class="h4 text-warning mb-0"><%= 10 - @loyalty_card.punches_count %></div>
+      <small class="text-muted">Remaining</small>
+    </div>
+    <div class="col-4">
+      <div class="h4 text-info mb-0">$8.00</div>
+      <small class="text-muted">Reward Value</small>
+    </div>
+  </div>
+</div>
