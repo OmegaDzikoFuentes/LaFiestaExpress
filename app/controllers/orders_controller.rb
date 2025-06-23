@@ -1,10 +1,12 @@
 # app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
-  before_action :require_user_logged_in
+
   before_action :set_order, only: [:show, :checkout, :complete, :add_loyalty_punch]
   
   def index
-    @orders = current_user.orders.includes(:order_items, :menu_items).order(created_at: :desc)
+    @orders = current_user.orders
+                          .includes(order_items: :menu_item)  # Include the associations
+                          .order(created_at: :desc)
   end
   
   def show
@@ -13,21 +15,45 @@ class OrdersController < ApplicationController
   
   def new
     @order = current_user.orders.build
+    @order.status = 'cart'
   end
   
   def create
     @order = current_user.orders.build(order_params)
+    @order.order_date = Time.current
+    @order.status = 'pending'
     
     if @order.save
-      redirect_to @order, notice: 'Order created successfully.'
+      session[:order_id] = @order.id
+      redirect_to categories_path, notice: 'Order created successfully! Start adding items to your cart.'
     else
-      render :new, status: :unprocessable_entity
+      render :new
     end
   end
   
+  def edit
+  end
+
+  def update
+    if @order.update(order_params)
+      redirect_to @order, notice: 'Order was successfully updated.'
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @order.destroy
+    redirect_to orders_path, notice: 'Order was successfully deleted.'
+  end
+
   def checkout
-    # Display checkout form
-    @order.calculate_totals!
+    @order.calculate_totals
+    if @order.save
+      render :checkout
+    else
+      redirect_to @order, alert: 'Error processing order.'
+    end
   end
   
   def complete
@@ -102,6 +128,6 @@ class OrdersController < ApplicationController
   end
   
   def order_params
-    params.require(:order).permit(:notes, :special_instructions)
+    params.require(:order).permit(:contact_name, :contact_phone, :contact_email)
   end
 end

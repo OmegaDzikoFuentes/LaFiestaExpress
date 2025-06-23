@@ -1,0 +1,121 @@
+<div class="min-h-screen py-8 bg-gray-50">
+    <div class="max-w-md mx-auto px-4">
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Profile Header -->
+        <div class="bg-gradient-to-r from-red-600 to-orange-500 p-6 text-white text-center">
+          <i class="fas fa-user-circle text-4xl mb-4"></i>
+          <h1 class="text-2xl font-bold">Your Profile</h1>
+          <p class="text-orange-100 mt-1">Manage your account details and loyalty status</p>
+        </div>
+  
+        <div class="p-6">
+          <!-- Account Information -->
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <i class="fas fa-user-circle text-mexican mr-2"></i>
+              Account Information
+            </h2>
+            
+            <div class="space-y-4 bg-gray-50 rounded-lg p-4">
+              <div class="flex justify-between border-b border-gray-200 pb-3">
+                <span class="font-medium text-gray-700">Name:</span>
+                <span class="text-gray-900"><%= @user.full_name %></span>
+              </div>
+              
+              <div class="flex justify-between border-b border-gray-200 pb-3">
+                <span class="font-medium text-gray-700">Email:</span>
+                <span class="text-gray-900"><%= @user.email %></span>
+              </div>
+              
+              <div class="flex justify-between border-b border-gray-200 pb-3">
+                <span class="font-medium text-gray-700">Username:</span>
+                <span class="text-gray-900"><%= @user.username %></span>
+              </div>
+              
+              <% if @user.phone.present? %>
+                <div class="flex justify-between">
+                  <span class="font-medium text-gray-700">Phone:</span>
+                  <span class="text-gray-900"><%= @user.phone %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+  
+          <!-- Loyalty Status -->
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <i class="fas fa-star text-mexican mr-2"></i>
+              Loyalty Status
+            </h2>
+            
+            <% if @user.loyalty_cards.active.any? %>
+              <% card = @user.loyalty_cards.active.first %>
+              <div class="bg-gradient-to-r from-red-600 to-orange-500 text-white rounded-lg p-4">
+                <div class="text-center">
+                  <p class="text-lg font-bold"><%= card.punches_count %>/10 Punches</p>
+                  <div class="mt-2 bg-white bg-opacity-20 rounded-full h-3">
+                    <div class="bg-white rounded-full h-3" 
+                         style="width: <%= (card.punches_count.to_f / 10 * 100).round(1) %>%"></div>
+                  </div>
+                  <p class="text-sm mt-2 text-orange-100">
+                    <%= 10 - card.punches_count %> punches until your $8 reward!
+                  </p>
+                </div>
+              </div>
+            <% else %>
+              <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                <p class="text-gray-700">No active loyalty card</p>
+                <%= link_to "Get a Loyalty Card", loyalty_cards_path, 
+                    class: "mt-2 inline-block text-mexican hover:text-orange-600 font-medium" %>
+              </div>
+            <% end %>
+          </div>
+  
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4">
+            <%= link_to edit_profile_path, 
+                class: "flex-1 bg-mexican text-white py-3 px-4 rounded-lg font-semibold hover:bg-orange-600 transition-colors text-center" do %>
+              <i class="fas fa-edit mr-2"></i>Edit Profile
+            <% end %>
+            
+            <%= link_to orders_path, 
+                class: "flex-1 border border-gray-300 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors text-center" do %>
+              <i class="fas fa-history mr-2"></i>Order History
+            <% end %>
+          </div>
+  
+          <!-- Additional Options -->
+          <div class="mt-6 pt-6 border-t border-gray-200">
+            <div class="grid grid-cols-1 gap-4">
+              <%= link_to loyalty_cards_path, 
+                  class: "flex items-center text-gray-700 hover:text-mexican" do %>
+                <i class="fas fa-credit-card text-lg w-8"></i>
+                <span>View Loyalty Cards</span>
+              <% end %>
+              
+              <%= link_to receipt_uploads_path, 
+                  class: "flex items-center text-gray-700 hover:text-mexican" do %>
+                <i class="fas fa-receipt text-lg w-8"></i>
+                <span>Receipt Upload History</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Features -->
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+        <div class="bg-white rounded-lg p-4 shadow">
+          <i class="fas fa-gift text-mexican text-2xl mb-2"></i>
+          <h3 class="font-semibold text-gray-800">Loyalty Rewards</h3>
+          <p class="text-gray-600 text-sm">Earn punches with every purchase</p>
+        </div>
+        
+        <div class="bg-white rounded-lg p-4 shadow">
+          <i class="fas fa-history text-mexican text-2xl mb-2"></i>
+          <h3 class="font-semibold text-gray-800">Order History</h3>
+          <p class="text-gray-600 text-sm">View your previous orders</p>
+        </div>
+      </div>
+    </div>
+  </div>

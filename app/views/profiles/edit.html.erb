@@ -1,0 +1,149 @@
+<div class="min-h-screen py-8 bg-gray-50">
+  <div class="max-w-2xl mx-auto px-4">
+    <!-- Breadcrumb -->
+    <nav class="mb-8">
+      <%= link_to "Profile", profile_path, class: "text-mexican hover:underline" %> 
+      <span class="text-gray-500 mx-2">/</span>
+      <span class="text-gray-700">Edit Profile</span>
+    </nav>
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-gradient-to-r from-mexican to-orange-600 p-6 text-white">
+        <h1 class="text-2xl font-bold">Edit Profile</h1>
+        <p class="text-orange-100 mt-1">Update your account information</p>
+      </div>
+
+      <div class="p-8">
+        <%= form_with model: @user, url: profile_path, method: :patch, local: true, class: "space-y-6" do |f| %>
+          
+          <!-- Error Messages -->
+          <% if @user.errors.any? %>
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div class="flex items-center mb-2">
+                <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                <h3 class="text-red-800 font-medium">Please fix the following errors:</h3>
+              </div>
+              <ul class="text-red-700 text-sm space-y-1">
+                <% @user.errors.full_messages.each do |message| %>
+                  <li>• <%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <!-- Personal Information -->
+          <div class="border-b border-gray-200 pb-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Personal Information</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <%= f.label :first_name, class: "block text-gray-700 font-medium mb-2" %>
+                <%= f.text_field :first_name, 
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican #{'border-red-300' if @user.errors[:first_name].any?}" %>
+              </div>
+              
+              <div>
+                <%= f.label :last_name, class: "block text-gray-700 font-medium mb-2" %>
+                <%= f.text_field :last_name, 
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican #{'border-red-300' if @user.errors[:last_name].any?}" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Information -->
+          <div class="border-b border-gray-200 pb-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Account Information</h2>
+            
+            <div class="space-y-4">
+              <div>
+                <%= f.label :username, class: "block text-gray-700 font-medium mb-2" %>
+                <%= f.text_field :username, 
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican #{'border-red-300' if @user.errors[:username].any?}" %>
+                <p class="text-gray-500 text-sm mt-1">This will be your unique identifier for login</p>
+              </div>
+              
+              <div>
+                <%= f.label :email, class: "block text-gray-700 font-medium mb-2" %>
+                <%= f.email_field :email, 
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican #{'border-red-300' if @user.errors[:email].any?}" %>
+              </div>
+              
+              <div>
+                <%= f.label :phone, "Phone Number (Optional)", class: "block text-gray-700 font-medium mb-2" %>
+                <%= f.telephone_field :phone, 
+                    placeholder: "1234567890",
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican #{'border-red-300' if @user.errors[:phone].any?}" %>
+                <p class="text-gray-500 text-sm mt-1">10 digits only, no dashes or spaces</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Password Change -->
+          <div class="pb-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Change Password</h2>
+            <p class="text-gray-600 text-sm mb-4">Leave blank if you don't want to change your password</p>
+            
+            <div class="space-y-4">
+              <div>
+                <%= f.label :password, "New Password", class: "block text-gray-700 font-medium mb-2" %>
+                <%= f.password_field :password, 
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican #{'border-red-300' if @user.errors[:password].any?}" %>
+                <p class="text-gray-500 text-sm mt-1">Must be at least 6 characters</p>
+              </div>
+              
+              <div>
+                <%= f.label :password_confirmation, "Confirm New Password", class: "block text-gray-700 font-medium mb-2" %>
+                <%= f.password_field :password_confirmation, 
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican #{'border-red-300' if @user.errors[:password_confirmation].any?}" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current Password Verification -->
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div class="flex items-center mb-2">
+              <i class="fas fa-shield-alt text-yellow-600 mr-2"></i>
+              <h3 class="text-yellow-800 font-medium">Security Verification</h3>
+            </div>
+            <p class="text-yellow-700 text-sm mb-3">Enter your current password to confirm changes to sensitive information (email, username, or password)</p>
+            
+            <div>
+              <%= f.label :current_password, "Current Password", class: "block text-gray-700 font-medium mb-2" %>
+              <%= f.password_field :current_password, 
+                  class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican #{'border-red-300' if @user.errors[:current_password].any?}" %>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-between items-center pt-6 border-t border-gray-200">
+            <%= link_to "Cancel", profile_path, 
+                class: "px-6 py-2 text-gray-600 hover:text-gray-800 font-medium" %>
+            
+            <div class="space-x-4">
+              <%= f.submit "Update Profile", 
+                  class: "bg-mexican text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium" %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Danger Zone -->
+        <div class="mt-12 pt-8 border-t border-red-200">
+          <h2 class="text-lg font-semibold text-red-800 mb-4">Danger Zone</h2>
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-red-800 font-medium">Delete Account</h3>
+                <p class="text-red-700 text-sm mt-1">This action cannot be undone. All your data will be permanently deleted.</p>
+              </div>
+              <%= link_to "Delete Account", user_path(@user), method: :delete,
+                  data: { 
+                    confirm: "Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data including orders and loyalty cards." 
+                  },
+                  class: "bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium text-sm" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

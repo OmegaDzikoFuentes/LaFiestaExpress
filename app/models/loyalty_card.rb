@@ -10,7 +10,7 @@ class LoyaltyCard < ApplicationRecord
     scope :redeemed, -> { where(is_redeemed: true) }
     
     validates :max_punches, presence: true, numericality: { greater_than: 0 }
-    validates :reward_description, presence: true
+
     
     def current_punches
       loyalty_punches.count
@@ -46,6 +46,8 @@ class LoyaltyCard < ApplicationRecord
       return 100 if completed?
       (current_punches.to_f / max_punches * 100).round(1)
     end
+
+    
   end
 
 

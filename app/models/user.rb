@@ -38,6 +38,24 @@ class User < ApplicationRecord
    def current_loyalty_card
      loyalty_cards.active.first || loyalty_cards.create!
    end
+
+   def current_order
+    orders.find_by(status: 'cart')
+  end
+  
+  def current_loyalty_card
+    loyalty_cards.where(is_completed: false, is_redeemed: false).first
+  end
+
+   def generate_password_reset_token!
+      self.reset_password_token = SecureRandom.urlsafe_base64
+      self.reset_password_sent_at = Time.current
+      save!(validate: false)
+    end
+  
+    def password_reset_expired?
+      reset_password_sent_at < 2.hours.ago
+    end
  
    def total_punches
      loyalty_punches.count

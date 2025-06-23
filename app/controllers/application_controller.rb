@@ -1,7 +1,15 @@
 class ApplicationController < ActionController::Base
+  include SessionsHelper
   helper_method :current_user, :user_signed_in?
 
   private
+
+  def require_user_logged_in
+    unless logged_in?
+      store_location
+      redirect_to login_path, alert: "Please log in to access this page."
+    end
+  end
 
   def current_user
     @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]

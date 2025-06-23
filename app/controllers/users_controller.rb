@@ -1,45 +1,45 @@
 class UsersController < ApplicationController
-    before_action :authenticate_user!, except: [:new, :create]
-    before_action :set_user, only: [:show, :edit, :update]
-    before_action :authorize_user!, only: [:edit, :update]
+  skip_before_action :require_user_logged_in, only: [:new, :create]
   
-    def new
-      @user = User.new
-    end
+  before_action :authenticate_user!, only: [:destroy]
   
-    def create
-      @user = User.new(user_params)
-      if @user.save
-        session.clear
-        session[:user_id] = @user.id
-        redirect_to root_path, notice: "Welcome to La Fiesta! Account created."
-      else
-        render :new, status: :unprocessable_entity
-      end
-    end
+  def new
+    @user = User.new
+  end
   
-    def update
-      if @user.authenticate(params[:user][:current_password]) && @user.update(user_params)
-        redirect_to @user, notice: "Profile updated!"
-      else
-        handle_update_errors
-        render :edit, status: :unprocessable_entity
-      end
-    end
-  
-    private
-  
-    def handle_update_errors
-      return if @user.authenticate(params[:user][:current_password])
-      @user.errors.add(:current_password, "is invalid") 
-      @user.restore_attributes # Prevent password change on failed auth
-    end
-  
-    def user_params
-      params.require(:user).permit(
-        :first_name, :last_name, :username, 
-        :email, :phone, :password, 
-        :password_confirmation, :current_password
-      )
+  def create
+    @user = User.new(user_params)
+    
+    if @user.save
+      session.clear
+      session[:user_id] = @user.id
+      
+      # Create initial loyalty card for new user
+      @user.loyalty_cards.create!
+      
+      redirect_to root_path, notice: "Welcome to La Fiesta! Your account has been created and your loyalty card is ready."
+    else
+      render :new, status: :unprocessable_entity
     end
   end
+  
+  
+  def destroy
+    # Allow users to delete their own account
+    if current_user.destroy
+      session.clear
+      redirect_to root_path, notice: "Your account has been deleted."
+    else
+      redirect_to profile_path, alert: "Unable to delete account."
+    end
+  end
+  
+  private
+  
+  def user_params
+    params.require(:user).permit(
+      :first_name, :last_name, :username, 
+      :email, :phone, :password, :password_confirmation
+    )
+  end
+end

@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   post "/signup", to: "users#create"
 
   # User management routes
-  resources :users, only: [:show, :edit, :update, :destroy]
+  resources :users, only: [:edit, :update, :destroy]
 
   # For search functionality
   get '/search', to: 'menu_items#search'
@@ -107,6 +107,13 @@ Rails.application.routes.draw do
       end
     end
     
+      # Password reset routes
+
+    resources :password_resets, only: [:new, :create]
+    get 'password_resets/:id/edit', to: 'password_resets#edit', as: :edit_password_reset
+    patch 'password_resets/:id', to: 'password_resets#update', as: :password_reset
+
+
     # Loyalty system management
     resources :loyalty_cards, only: [:index, :show]
     resources :loyalty_punches, only: [:index, :show, :destroy]
