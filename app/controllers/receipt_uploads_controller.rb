@@ -1,6 +1,7 @@
 # app/controllers/receipt_uploads_controller.rb
 class ReceiptUploadsController < ApplicationController
     before_action :authenticate_user!
+    before_action :require_user_logged_in
     before_action :set_receipt_upload, only: [:show, :destroy]
     before_action :set_loyalty_card, only: [:new, :create]
     

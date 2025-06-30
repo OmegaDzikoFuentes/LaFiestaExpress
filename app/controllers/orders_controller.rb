@@ -1,6 +1,8 @@
 # app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
 
+  before_action :require_user_logged_in
+
   before_action :set_order, only: [:show, :checkout, :complete, :add_loyalty_punch]
   
   def index

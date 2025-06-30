@@ -1,5 +1,6 @@
 class OrderItemsController < ApplicationController
     before_action :authenticate_user!
+    before_action :require_user_logged_in
     before_action :set_order, only: [:create]
     before_action :set_order_item, only: [:destroy, :update]
     before_action :ensure_cart_status, only: [:create, :update, :destroy]

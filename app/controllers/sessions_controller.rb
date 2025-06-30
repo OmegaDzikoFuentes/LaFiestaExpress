@@ -1,7 +1,8 @@
 class SessionsController < ApplicationController
-    skip_before_action :require_user_logged_in, only: [:new, :create]
+    skip_before_action :set_current_order, only: [:new, :create]
     
     def new
+      clear_stored_location
     end
   
     def create
@@ -16,7 +17,7 @@ class SessionsController < ApplicationController
     end
   
     def destroy
-      session.clear
+      session[:user_id] = nil
       redirect_to root_path, notice: "You have been logged out."
     end
   end

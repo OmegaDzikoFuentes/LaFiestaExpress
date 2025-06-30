@@ -1,6 +1,7 @@
 class CustomizationsController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
+    before_action :require_user_logged_in
     before_action :set_menu_item
     before_action :set_customization, only: [:edit, :update, :destroy]
   
