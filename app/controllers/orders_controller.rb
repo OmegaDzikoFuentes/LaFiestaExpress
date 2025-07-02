@@ -12,7 +12,8 @@ class OrdersController < ApplicationController
   end
   
   def show
-    @order_items = @order.order_items.includes(:menu_item, :customizations)
+    @order = current_user.orders.find(params[:id])
+    @order_items = @order.order_items.includes(:menu_item, :order_item_customizations)
   end
   
   def new
@@ -73,7 +74,7 @@ class OrdersController < ApplicationController
     @order = current_user.current_order
     
     if @order
-      @order_items = @order.order_items.includes(:menu_item, :customizations)
+      @order_items = @order.order_items.includes(:menu_item, :order_item_customizations)
       render :show
     else
       redirect_to menu_items_path, notice: 'Your cart is empty.'
@@ -130,6 +131,6 @@ class OrdersController < ApplicationController
   end
   
   def order_params
-    params.require(:order).permit(:contact_name, :contact_phone, :contact_email)
+    params.require(:order).permit(:contact_name, :contact_phone, :contact_email, :pickup_time, :special_instructions)
   end
 end

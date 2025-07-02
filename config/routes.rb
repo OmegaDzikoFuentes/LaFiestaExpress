@@ -61,7 +61,7 @@ Rails.application.routes.draw do
   resources :order_items, only: [:create, :update, :destroy]
 
   # Receipt upload system
-  resources :receipt_uploads, only: [:index, :show, :create, :destroy]
+  resources :receipt_uploads, only: [:index, :show, :new, :create, :destroy]
 
   # Loyalty card routes (simplified - removed problematic punch action)
   resources :loyalty_cards, only: [:index, :show, :create] do

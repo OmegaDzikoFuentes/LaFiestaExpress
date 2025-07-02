@@ -10,6 +10,8 @@ class LoyaltyCard < ApplicationRecord
     scope :redeemed, -> { where(is_redeemed: true) }
     
     validates :max_punches, presence: true, numericality: { greater_than: 0 }
+    validates :user_id, :discount_amount, presence: true
+  validates :punches_count, numericality: { greater_than_or_equal_to: 0 }
 
     
     def current_punches

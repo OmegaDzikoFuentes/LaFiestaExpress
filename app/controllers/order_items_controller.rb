@@ -24,6 +24,11 @@ class OrderItemsController < ApplicationController
         redirect_to menu_item_path(@menu_item), alert: "Could not add item to your order."
       end
     end
+
+    def show
+      @order_item = OrderItem.find(params[:id])
+      
+    end
   
     def update
       if @order_item.update(order_item_params)
@@ -77,7 +82,6 @@ class OrderItemsController < ApplicationController
         
         customization = Customization.find(customization_id)
         @order_item.order_item_customizations.create(
-          customization: customization,
           customization_name: customization.name,
           price_adjustment: customization.price_adjustment
         )

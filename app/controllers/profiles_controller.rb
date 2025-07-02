@@ -6,7 +6,11 @@ class ProfilesController < ApplicationController
       @user = current_user
       @loyalty_cards = current_user.loyalty_cards.includes(:loyalty_punches).order(created_at: :desc)
       @recent_orders = current_user.orders.includes(:order_items).order(created_at: :desc).limit(5)
-      @current_loyalty_card = current_user.current_loyalty_card
+      @current_loyalty_card = current_user.current_loyalty_card || 
+                            current_user.loyalty_cards.create!(
+                              punches_count: 0,
+                              discount_amount: 8.00
+                            )
       @total_savings = current_user.total_loyalty_savings
     end
     

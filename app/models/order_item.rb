@@ -8,4 +8,6 @@ class OrderItem < ApplicationRecord
 
     validates :quantity, presence: true, numericality: { greater_than: 0 }
     validates :item_price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+
+    alias_method :customizations, :order_item_customizations
 end
