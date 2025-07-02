@@ -5,7 +5,7 @@ class LoyaltyCardsController < ApplicationController
     
     def index
       @loyalty_cards = current_user.loyalty_cards.includes(:loyalty_punches).order(created_at: :desc)
-      @current_card = current_user.current_loyalty_card
+      @current_loyalty_card = current_user.current_loyalty_card
     end
     
     def show

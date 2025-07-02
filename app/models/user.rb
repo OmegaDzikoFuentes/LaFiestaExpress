@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :loyalty_cards, dependent: :destroy
   has_many :loyalty_punches, through: :loyalty_cards
+  has_many :receipt_uploads, dependent: :destroy
 
   validates :first_name, presence: true, length: { maximum: 25 }
   validates :last_name, presence: true, length: { maximum: 25 }
@@ -40,8 +41,10 @@ class User < ApplicationRecord
   end
 
   def current_loyalty_card
-    loyalty_cards.where(is_completed: false, is_redeemed: false).first
+    loyalty_cards.where(is_completed: false, is_redeemed: false).first ||
+    loyalty_cards.where(is_completed: true, is_redeemed: false).first
   end
+
 
   def total_loyalty_savings
     loyalty_cards.where(is_redeemed: true).sum(:discount_amount)
