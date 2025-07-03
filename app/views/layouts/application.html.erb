@@ -57,18 +57,42 @@
         transform: translateY(0);
         opacity: 1;
       }
+      .logo-image {
+        background: transparent !important;
+        mix-blend-mode: multiply;
+      }
+      /* Ensure mobile menu stays above other content */
+      .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 40;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+      .mobile-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
     </style>
   </head>
 
   <body class="bg-gray-50">
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay md:hidden"></div>
+    
     <!-- Navigation Header -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
+    <nav class="bg-orange shadow-lg sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <!-- Logo -->
           <div class="flex items-center">
-            <%= link_to root_path, class: "flex items-center" do %>
-              <%= image_tag "xpresslogo.jpeg", alt: "La Fiesta Express Logo", class: "h-10 w-auto mr-2" %>
+            <%= link_to root_path, class: "flex items-center", id: "logo-link" do %>
+              <%= image_tag "chatXLogo.png", alt: "La Fiesta Express Logo", class: "h-14 w-auto mr-4 logo-image" %>
             <% end %>
           </div>
 
@@ -122,10 +146,10 @@
                     <% end %>
                     
                     <div class="border-t border-gray-100 mt-2 pt-2">
-                    <%= button_to logout_path, method: :delete, class: "flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 transition-colors" do %>
-                      <i class="fas fa-sign-out-alt mr-3"></i>
-                      Sign Out
-                    <% end %>
+                      <%= button_to logout_path, method: :delete, class: "flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 transition-colors border-0 bg-transparent text-left" do %>
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Sign Out
+                      <% end %>
                     </div>
                   </div>
                 </div>
@@ -137,7 +161,7 @@
 
           <!-- Mobile menu button -->
           <div class="md:hidden">
-            <button id="mobile-menu-button" class="text-gray-700 hover:text-mexican p-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <button id="mobile-menu-button" class="text-gray-700 hover:text-mexican p-2 rounded-lg hover:bg-gray-50 transition-colors" type="button">
               <i class="fas fa-bars text-lg"></i>
             </button>
           </div>
@@ -145,9 +169,9 @@
       </div>
 
       <!-- Mobile Menu -->
-      <div id="mobile-menu" class="mobile-menu md:hidden bg-white border-t border-gray-200 absolute w-full shadow-lg">
+      <div id="mobile-menu" class="mobile-menu md:hidden bg-white border-t border-gray-200 absolute w-full shadow-lg z-50">
         <div class="px-4 py-4 space-y-3">
-          <%= link_to "Menu", categories_path, class: "block text-gray-700 hover:text-mexican font-medium py-2 transition-colors", onclick: "scrollToMenu(event)" %>
+          <%= link_to "Menu", categories_path, class: "block text-gray-700 hover:text-mexican font-medium py-2 transition-colors" %>
           <%= link_to "About", restaurant_info_path, class: "block text-gray-700 hover:text-mexican font-medium py-2 transition-colors" %>
           
           <% if user_signed_in? %>
@@ -180,7 +204,7 @@
                 <% end %>
               <% end %>
               
-              <%= button_to logout_path, method: :delete, class: "block w-full text-left text-red-600 hover:text-red-800 py-2 pl-4 transition-colors" do %>
+              <%= button_to logout_path, method: :delete, class: "block w-full text-left text-red-600 hover:text-red-800 py-2 pl-4 transition-colors border-0 bg-transparent mt-2 pt-2 border-t border-gray-200" do %>
                 <i class="fas fa-sign-out-alt mr-2"></i> Sign Out
               <% end %>
             </div>
@@ -273,35 +297,71 @@
       </div>
     </footer>
 
-    <!-- JavaScript for Mobile Menu and Menu Scroll -->
+    <!-- JavaScript for Mobile Menu -->
     <script>
-      // Mobile menu toggle
       document.addEventListener('DOMContentLoaded', function() {
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const logoLink = document.getElementById('logo-link');
         
-        if (mobileMenuButton && mobileMenu) {
-          mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('active');
-            
-            // Toggle icon
+        if (mobileMenuButton && mobileMenu && mobileMenuOverlay) {
+          
+          // Function to close mobile menu
+          function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
             const icon = mobileMenuButton.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+          }
+          
+          // Function to open mobile menu
+          function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            const icon = mobileMenuButton.querySelector('i');
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+          }
+          
+          // Toggle mobile menu
+          mobileMenuButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             if (mobileMenu.classList.contains('active')) {
-              icon.classList.remove('fa-bars');
-              icon.classList.add('fa-times');
+              closeMobileMenu();
             } else {
-              icon.classList.remove('fa-times');
-              icon.classList.add('fa-bars');
+              openMobileMenu();
             }
           });
           
-          // Close mobile menu when clicking outside
+          // Close mobile menu when clicking overlay
+          mobileMenuOverlay.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeMobileMenu();
+          });
+          
+          // Close mobile menu when clicking menu links
+          const mobileMenuLinks = mobileMenu.querySelectorAll('a:not([method])');
+          mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', function() {
+              closeMobileMenu();
+            });
+          });
+          
+          // Prevent menu from interfering with desktop dropdowns
           document.addEventListener('click', function(event) {
-            if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
-              mobileMenu.classList.remove('active');
-              const icon = mobileMenuButton.querySelector('i');
-              icon.classList.remove('fa-times');
-              icon.classList.add('fa-bars');
+            // Only handle clicks on mobile
+            if (window.innerWidth < 768) {
+              const isMenuButton = event.target.closest('#mobile-menu-button');
+              const isMenuContent = event.target.closest('#mobile-menu');
+              const isOverlay = event.target.closest('#mobile-menu-overlay');
+              
+              if (!isMenuButton && !isMenuContent && !isOverlay) {
+                closeMobileMenu();
+              }
             }
           });
         }
@@ -309,7 +369,7 @@
 
       // Function to scroll to menu section on categories page
       function scrollToMenu(event) {
-        // Check if we're on the categories page (root page)
+        // Check if we are on the categories page (root page)
         if (window.location.pathname === '/' || window.location.pathname === '/categories') {
           event.preventDefault();
           
@@ -324,15 +384,6 @@
               behavior: 'smooth',
               block: 'start'
             });
-          }
-          
-          // Close mobile menu if open
-          const mobileMenu = document.getElementById('mobile-menu');
-          if (mobileMenu && mobileMenu.classList.contains('active')) {
-            mobileMenu.classList.remove('active');
-            const icon = document.getElementById('mobile-menu-button').querySelector('i');
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
           }
         }
         // If not on categories page, let the link work normally to navigate there

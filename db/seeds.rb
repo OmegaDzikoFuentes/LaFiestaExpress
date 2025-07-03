@@ -19,7 +19,7 @@ resto = RestaurantInfo.create!(
   zip_code:        "45373",
   phone:           "937-703-1371",
   email:           "troylafiestaexpress@gmail.com",
-  logo_url:        "https://lafiestaexpress.s3.us-east-2.amazonaws.com/logo_2.jpeg",
+  logo_url:        "https://lafiestaexpress.s3.us-east-2.amazonaws.com/cleanXpressLogo.png",
   monday_hours:    "11:00 AM – 9:30 PM",  # Fixed typo: mondaay_hours -> monday_hours
   tuesday_hours:   "11:00 AM – 9:30 PM",
   wednesday_hours: "11:00 AM – 9:30 PM",
@@ -279,7 +279,7 @@ resto.assign_attributes(
   zip_code:        "45373",
   phone:           "937-703-1371",
   email:           "troylafiestaexpress@gmail.com",
-  logo_url:        "https://lafiestaexpress.s3.us-east-2.amazonaws.com/logo_2.jpeg",
+  logo_url:        "https://lafiestaexpress.s3.us-east-2.amazonaws.com/cleanXpressLogo.png",
   monday_hours:    "11:00 AM – 9:30 PM",
   tuesday_hours:   "11:00 AM – 9:30 PM",
   wednesday_hours: "11:00 AM – 9:30 PM",
