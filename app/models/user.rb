@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
+  encrypts :api_token, deterministic: true
 
   has_many :orders, dependent: :destroy
   has_many :loyalty_cards, dependent: :destroy

@@ -6,8 +6,8 @@ class OrderItemsController < ApplicationController
     before_action :ensure_cart_status, only: [:create, :update, :destroy]
   
     def create
+      @order = current_user.current_order || current_user.orders.create!(status: 'cart', order_date: Time.current)
       @menu_item = MenuItem.find(params[:menu_item_id])
-      
       @order_item = @order.order_items.new(
         menu_item: @menu_item,
         item_name: @menu_item.name,
@@ -15,10 +15,9 @@ class OrderItemsController < ApplicationController
         quantity: params[:quantity] || 1,
         special_request: params[:special_request]
       )
-  
       if @order_item.save
         add_customizations
-        recalculate_order_totals
+        @order.calculate_totals
         redirect_to menu_items_path, notice: "#{@menu_item.name} added to your order!"
       else
         redirect_to menu_item_path(@menu_item), alert: "Could not add item to your order."

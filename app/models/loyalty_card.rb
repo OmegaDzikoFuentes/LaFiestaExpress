@@ -23,7 +23,7 @@ class LoyaltyCard < ApplicationRecord
     end
 
     def max_punches
-        10 # Or make this configurable
+      attributes['max_punches'] || 10
     end
     
     def completed?

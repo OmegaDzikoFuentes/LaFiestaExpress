@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_031300) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_23_173529) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -85,6 +85,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_031300) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "receipt_upload_id", null: false
+    t.boolean "is_approved", default: false, null: false
+    t.datetime "rejected_at"
     t.index ["loyalty_card_id", "order_id"], name: "index_loyalty_punches_on_loyalty_card_id_and_order_id", unique: true
     t.index ["loyalty_card_id"], name: "index_loyalty_punches_on_loyalty_card_id"
     t.index ["order_id"], name: "index_loyalty_punches_on_order_id"
@@ -100,6 +102,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_031300) do
     t.integer "category_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "tax_exempt", default: false, null: false
+    t.boolean "available", default: true, null: false
     t.index ["category_id"], name: "index_menu_items_on_category_id"
   end
 
@@ -140,6 +144,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_031300) do
     t.datetime "pickup_time"
     t.text "special_instructions"
     t.datetime "completed_at"
+    t.integer "loyalty_card_id"
+    t.index ["loyalty_card_id"], name: "index_orders_on_loyalty_card_id"
+    t.index ["user_id", "status"], name: "index_orders_on_user_id_and_status", unique: true, where: "status = 'pending'"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -179,6 +186,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_031300) do
     t.string "sunday_hours"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "tax_rate", default: 0.075, null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -187,12 +195,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_031300) do
     t.string "username", limit: 25, null: false
     t.string "email", limit: 25, null: false
     t.string "phone", limit: 20
-    t.string "password_digest", limit: 25, null: false
+    t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "admin", default: false, null: false
     t.string "reset_password_token"
     t.string "reset_password_sent_at"
+    t.string "api_token"
+    t.index ["api_token"], name: "index_users_on_api_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -206,6 +216,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_031300) do
   add_foreign_key "order_item_customizations", "order_items"
   add_foreign_key "order_items", "menu_items"
   add_foreign_key "order_items", "orders"
+  add_foreign_key "orders", "loyalty_cards"
   add_foreign_key "orders", "users"
   add_foreign_key "receipt_uploads", "loyalty_cards"
   add_foreign_key "receipt_uploads", "users"

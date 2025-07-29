@@ -20,24 +20,24 @@ class ReceiptUploadsController < ApplicationController
     end
   
     def create
-      @receipt_upload = current_user.receipt_uploads.build(receipt_upload_params)
-      @receipt_upload.loyalty_card = @loyalty_card if @loyalty_card
-      
+      @receipt_upload = current_user.receipt_uploads.new(receipt_upload_params)
+      @loyalty_card = current_user.current_loyalty_card
+      unless @loyalty_card
+        redirect_to receipt_uploads_path, alert: 'No active loyalty card found.'
+        return
+      end
+      if @loyalty_card.completed?
+        redirect_to receipt_uploads_path, alert: 'Loyalty card is already complete.'
+        return
+      end
       if @receipt_upload.save
-        # Create pending loyalty punch
-        if @loyalty_card
-          @loyalty_punch = @loyalty_card.loyalty_punches.create!(
-            receipt_upload: @receipt_upload,
-            punch_number: @loyalty_card.punches_count + 1,
-            created_at: Time.current
-          )
-        end
-        
-        # Notify admins
-        AdminNotificationJob.perform_later('new_receipt_upload', @receipt_upload.id)
-        
-        redirect_to receipt_uploads_path, 
-                    notice: 'Receipt uploaded successfully! We\'ll review it and add your punch within 24 hours.'
+        @loyalty_punch = @loyalty_card.loyalty_punches.create!(
+          receipt_upload: @receipt_upload,
+          punch_number: @loyalty_card.punches_count + 1,
+          order_id: session[:pending_loyalty_order_id],
+          created_at: Time.current
+        )
+        redirect_to receipt_uploads_path, notice: 'Receipt uploaded successfully.'
       else
         render :new, status: :unprocessable_entity
       end

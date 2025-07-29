@@ -5,9 +5,9 @@ class MenuItemsController < ApplicationController
 
   def index
     @menu_items = if params[:category_id]
-                    Category.find(params[:category_id]).menu_items.order(:name)
+                    Category.find(params[:category_id]).menu_items.where(available: true).order(:name)
                   else
-                    MenuItem.all.includes(:category).order('categories.name', :name)
+                    MenuItem.where(available: true).includes(:category).order('categories.name', :name)
                   end
   end
 

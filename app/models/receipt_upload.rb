@@ -8,6 +8,7 @@ class ReceiptUpload < ApplicationRecord
     
     validates :image, presence: true
     validate :acceptable_image
+    validates :receipt_total, numericality: { greater_than: 0 }, allow_nil: true
     
     scope :pending_approval, -> { joins(:loyalty_punch).where(loyalty_punches: { is_approved: false }) }
     scope :approved, -> { joins(:loyalty_punch).where(loyalty_punches: { is_approved: true }) }

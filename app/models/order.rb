@@ -1,5 +1,6 @@
 class Order < ApplicationRecord
   belongs_to :user
+  belongs_to :loyalty_card, optional: true
   has_many :order_items, dependent: :destroy
   has_many :menu_items, through: :order_items
   has_many :loyalty_punches, dependent: :destroy
@@ -21,12 +22,31 @@ class Order < ApplicationRecord
   end
 
   def calculate_totals
-    self.subtotal = order_items.sum { |item| item.quantity * item.item_price }
-    self.tax = subtotal * 0.08 # Assuming 8% tax rate
+    self.subtotal = order_items.sum do |item|
+      next 0 if item.menu_item.tax_exempt
+      item_total = item.quantity * item.item_price
+      customization_total = item.order_item_customizations.sum { |c| c.price_adjustment || 0 }
+      item_total + (customization_total * item.quantity)
+    end
+    self.tax = subtotal * (RestaurantInfo.first.tax_rate || 0.075)
     self.total_amount = subtotal + tax
+    save!
+  end
+
+  def apply_loyalty_discount
+    return unless loyalty_card&.can_be_redeemed?
+    self.total_amount -= loyalty_card.discount_amount
+    loyalty_card.redeem!
+    save!
   end
 
   def can_add_loyalty_punch?
     status == 'completed' && loyalty_punches.empty?
+  end
+
+  after_update :send_status_notification, if: :status_changed?
+  private
+  def send_status_notification
+    OrderMailer.status_update(self).deliver_later
   end
 end

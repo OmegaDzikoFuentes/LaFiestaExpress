@@ -1,0 +1,16 @@
+<canvas id="popularItemsChart"></canvas>
+<%= javascript_include_tag 'chart' %>
+<script>
+  const ctx = document.getElementById('popularItemsChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: <%= @popular_items.map { |item| item[:menu_item].name }.to_json %>,
+      datasets: [{
+        label: 'Items Sold',
+        data: <%= @popular_items.map { |item| item[:quantity] }.to_json %>,
+        backgroundColor: 'rgba(255, 99, 71, 0.8)'
+      }]
+    }
+  });
+</script>

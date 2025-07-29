@@ -60,10 +60,10 @@ class OrdersController < ApplicationController
   end
   
   def complete
-    if @order.update(status: 'completed', completed_at: Time.current)
-      # Clear current cart items if this was the current order
+    if @order.update(order_params.merge(status: 'completed', completed_at: Time.current))
+      @order.apply_loyalty_discount if @order.loyalty_card_id
+      OrderMailer.confirmation_email(@order).deliver_later
       session[:current_order_id] = nil if session[:current_order_id] == @order.id
-      
       redirect_to @order, notice: 'Order completed successfully!'
     else
       render :checkout, status: :unprocessable_entity
