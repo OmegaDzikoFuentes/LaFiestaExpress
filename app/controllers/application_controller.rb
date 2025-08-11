@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   helper_method :current_user, :user_signed_in?
 
-  
   before_action :set_current_order, if: :user_signed_in?
   before_action :load_restaurant_info
 
@@ -36,7 +35,6 @@ class ApplicationController < ActionController::Base
     session.delete(:return_to)
   end
 
-
   def authenticate_user!
     unless user_signed_in?
       redirect_to login_path, alert: "You must be logged in to access this page."
@@ -49,20 +47,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Add this method to handle the current order setup
   def set_current_order
     return unless current_user
     
-    @current_order = current_user.orders.find_by(status: 'pending') || 
+    @current_order = current_user.orders.find_by(status: 'cart') || 
                      current_user.orders.create!(
-                       status: 'pending',
+                       status: 'cart',
                        order_date: Time.current
                      )
   end
 
-  # Add this method that you're calling but haven't defined yet
   def load_restaurant_info
     @restaurant_info = RestaurantInfo.first
   end
-
 end

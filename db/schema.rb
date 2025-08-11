@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_23_173529) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -87,6 +87,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_23_173529) do
     t.integer "receipt_upload_id", null: false
     t.boolean "is_approved", default: false, null: false
     t.datetime "rejected_at"
+    t.string "status", default: "pending", null: false
     t.index ["loyalty_card_id", "order_id"], name: "index_loyalty_punches_on_loyalty_card_id_and_order_id", unique: true
     t.index ["loyalty_card_id"], name: "index_loyalty_punches_on_loyalty_card_id"
     t.index ["order_id"], name: "index_loyalty_punches_on_order_id"
@@ -193,7 +194,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_23_173529) do
     t.string "first_name", limit: 25, null: false
     t.string "last_name", limit: 25, null: false
     t.string "username", limit: 25, null: false
-    t.string "email", limit: 25, null: false
+    t.string "email", limit: 255, null: false
     t.string "phone", limit: 20
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
