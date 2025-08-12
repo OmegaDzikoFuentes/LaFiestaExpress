@@ -5,6 +5,7 @@ class ReceiptUpload < ApplicationRecord
   has_one :loyalty_punch, dependent: :destroy
   has_one_attached :image
 
+  validate :scan_image, if: :image_attached?
   validates :image, presence: true
   validate :acceptable_image
   validates :receipt_total, numericality: { greater_than: 0 }, allow_nil: true
@@ -27,6 +28,11 @@ class ReceiptUpload < ApplicationRecord
   end
 
   private
+
+  def scan_image
+    return unless Clamby.unsafe?(image.download)  # Download and scan
+    errors.add(:image, "contains a virus")
+  end
 
   def acceptable_image
     return unless image.attached?

@@ -149,6 +149,7 @@ Rails.application.routes.draw do
           get :current_card
         end
       end
+      post 'refresh', to: 'base#refresh' 
     end
   end
 end

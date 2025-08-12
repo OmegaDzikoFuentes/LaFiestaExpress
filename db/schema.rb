@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_11_181615) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -56,7 +56,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
   create_table "customizations", force: :cascade do |t|
     t.integer "menu_item_id", null: false
     t.string "name", limit: 100
-    t.float "price_adjustment"
+    t.decimal "price_adjustment", precision: 10, scale: 2
     t.boolean "is_default", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -73,6 +73,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
     t.datetime "redeemed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_punches", default: 10, null: false
     t.index ["user_id", "is_completed"], name: "index_loyalty_cards_on_user_id_and_is_completed"
     t.index ["user_id", "is_redeemed"], name: "index_loyalty_cards_on_user_id_and_is_redeemed"
     t.index ["user_id"], name: "index_loyalty_cards_on_user_id"
@@ -98,7 +99,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
   create_table "menu_items", force: :cascade do |t|
     t.string "name", limit: 100, null: false
     t.text "description"
-    t.float "price", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
     t.string "image_url", limit: 255
     t.integer "category_id", null: false
     t.datetime "created_at", null: false
@@ -111,7 +112,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
   create_table "order_item_customizations", force: :cascade do |t|
     t.integer "order_item_id", null: false
     t.string "customization_name", limit: 100
-    t.float "price_adjustment"
+    t.decimal "price_adjustment", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_item_id"], name: "index_order_item_customizations_on_order_item_id"
@@ -121,7 +122,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
     t.integer "order_id", null: false
     t.integer "menu_item_id", null: false
     t.integer "quantity", default: 1, null: false
-    t.float "item_price", null: false
+    t.decimal "item_price", precision: 10, scale: 2, null: false
     t.string "item_name", limit: 100, null: false
     t.string "special_request", limit: 255
     t.datetime "created_at", null: false
@@ -137,9 +138,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
     t.string "contact_name", limit: 25
     t.string "contact_phone", limit: 20
     t.string "contact_email", limit: 120
-    t.float "subtotal", default: 0.0, null: false
-    t.float "tax", default: 0.0, null: false
-    t.float "total_amount", default: 0.0, null: false
+    t.decimal "subtotal", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "tax", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "total_amount", precision: 10, scale: 2, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "pickup_time"
@@ -147,6 +148,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
     t.datetime "completed_at"
     t.integer "loyalty_card_id"
     t.index ["loyalty_card_id"], name: "index_orders_on_loyalty_card_id"
+    t.index ["status"], name: "index_orders_on_status"
     t.index ["user_id", "status"], name: "index_orders_on_user_id_and_status", unique: true, where: "status = 'pending'"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -187,7 +189,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
     t.string "sunday_hours"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "tax_rate", default: 0.075, null: false
+    t.decimal "tax_rate", precision: 5, scale: 3, default: "0.075", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -201,9 +203,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_30_233745) do
     t.datetime "updated_at", null: false
     t.boolean "admin", default: false, null: false
     t.string "reset_password_token"
-    t.string "reset_password_sent_at"
+    t.datetime "reset_password_sent_at"
     t.string "api_token"
     t.index ["api_token"], name: "index_users_on_api_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

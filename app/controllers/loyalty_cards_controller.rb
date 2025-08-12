@@ -50,6 +50,11 @@ class LoyaltyCardsController < ApplicationController
         redirect_to @loyalty_card, alert: 'This loyalty card cannot be redeemed yet.'
         return
       end
+
+      @loyalty_card.with_lock do
+        return unless @loyalty_card.can_be_redeemed?
+        @loyalty_card.redeem!
+      end
       
       if @loyalty_card.redeem!
         redirect_to loyalty_cards_path, notice: 'Congratulations! Your loyalty card has been redeemed!'

@@ -1,4 +1,5 @@
 class Api::V1::BaseController < ApplicationController
+   include JwtAuthenticable
     skip_forgery_protection
     before_action :authenticate_api_user
     private

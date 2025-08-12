@@ -23,7 +23,7 @@ class LoyaltyCard < ApplicationRecord
     end
 
     def max_punches
-      attributes['max_punches'] || 10
+      self['max_punches']  
     end
     
     def completed?

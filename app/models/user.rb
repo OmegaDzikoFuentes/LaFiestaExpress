@@ -73,9 +73,18 @@ class User < ApplicationRecord
     loyalty_cards.where(is_completed: true).count
   end
 
+  validate :password_strength, if: :password_present?
+
   private
 
-  # PRIVATE METHODS - These are only used internally within the User model
+  def password_strength
+    result = Zxcvbn.test(password)
+    errors.add(:password, "is too weak (score: #{result.score}). Use a stronger password.") if result.score < 3
+  end
+
+  def password_present?
+    password.present?
+  end
   
   def loyalty_cards_exists?
     loyalty_cards.any?

@@ -17,8 +17,6 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
-
-
 gem 'rack-attack', '~> 6.7'
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
@@ -44,6 +42,14 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+# New gems for changes
+gem "clamby"  # For ClamAV file scanning on uploads
+gem "zxcvbn-ruby"  # Password strength validation
+gem "pundit"  # Fine-grained authorization
+gem "recaptcha"  # Google reCAPTCHA v3 for public forms (e.g., signup, login)
+gem "jwt"  # JWT for API auth with expiry/refresh
+gem "kaminari"  # Pagination
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -56,6 +62,9 @@ group :development, :test do
 
   # Tailwind CSS
   gem "tailwindcss-rails"
+
+  # Bullet for N+1 query detection
+  gem "bullet"
 end
 
 group :development do

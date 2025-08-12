@@ -7,7 +7,7 @@ class Order < ApplicationRecord
 
   validates :status, presence: true
   validates :order_date, presence: true
-  validates :total_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validate :total_amount_matches_calculation, on: :update
 
   # Status constants
   STATUSES = %w[cart placed preparing ready completed cancelled].freeze
@@ -22,6 +22,7 @@ class Order < ApplicationRecord
   end
 
   def calculate_totals
+    self.order_items.includes(:order_item_customizations) if order_items.loaded?
     self.subtotal = order_items.sum do |item|
       next 0 if item.menu_item.tax_exempt
       item_total = item.quantity * item.item_price
@@ -46,6 +47,11 @@ class Order < ApplicationRecord
 
   after_update :send_status_notification, if: :status_changed?
   private
+
+  def total_amount_matches_calculation
+    calculated_total = subtotal + tax
+    errors.add(:total_amount, "must equal subtotal + tax") unless total_amount == calculated_total
+  end
   def send_status_notification
     OrderMailer.status_update(self).deliver_later
   end
