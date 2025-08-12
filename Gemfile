@@ -50,6 +50,10 @@ gem "recaptcha"  # Google reCAPTCHA v3 for public forms (e.g., signup, login)
 gem "jwt"  # JWT for API auth with expiry/refresh
 gem "kaminari"  # Pagination
 
+# Add for Postgres (production DB) and Sidekiq (background jobs)
+gem "pg", "~> 1.5"  # PostgreSQL adapter
+gem "sidekiq"  # Background job processing
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -65,6 +69,8 @@ group :development, :test do
 
   # Bullet for N+1 query detection
   gem "bullet"
+
+  gem 'dotenv-rails'
 end
 
 group :development do

@@ -4,7 +4,7 @@ class CategoriesController < ApplicationController
   
     def index
       @banner_photos = BannerPhoto.all
-      @categories = Category.includes(:menu_items).order(:name)
+      @categories = Category.all
       @restaurant_info = RestaurantInfo.first
     end
   
