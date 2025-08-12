@@ -19,7 +19,7 @@ class User < ApplicationRecord
             length: { maximum: 25 },
             format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password,
-            length: { minimum: 6 },
+            length: { minimum: 8 },
             allow_nil: true
   validates :phone,
             length: { maximum: 20 },
