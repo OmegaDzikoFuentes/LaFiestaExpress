@@ -37,7 +37,7 @@
           <!-- Desktop Navigation Links -->
           <div class="hidden md:flex items-center space-x-8">
             <%= link_to "Menu", categories_path, class: "nav-link text-gray-700", onclick: "scrollToMenu(event)" %>
-            <%= link_to "About", restaurant_info_path, class: "nav-link text-gray-700" %>
+            <%= link_to "About", about_path, class: "nav-link text-gray-700" %>
             
             <% if user_signed_in? %>
               <!-- Cart Icon -->

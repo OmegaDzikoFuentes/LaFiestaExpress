@@ -295,10 +295,10 @@ BannerPhoto.delete_all
 # Create Banner Photos
 banner_photos = [
   { image_url: "https://lafiestaexpress.s3.us-east-2.amazonaws.com/bannerPhotos/logophoto.png" },
-  { image_url: "https://lafiestaexpress.s3.us-east-2.amazonaws.com/bannerPhotos/diana.jpeg" },
   { image_url: "https://lafiestaexpress.s3.us-east-2.amazonaws.com/bannerPhotos/avaCrew.jpeg" },
   { image_url: "https://lafiestaexpress.s3.us-east-2.amazonaws.com/bannerPhotos/harritos.jpeg" },
   { image_url: "https://lafiestaexpress.s3.us-east-2.amazonaws.com/bannerPhotos/hotplate.jpeg" },
+  { image_url: "https://lafiestaexpress.s3.us-east-2.amazonaws.com/bannerPhotos/diana.jpeg" },
   { image_url: "https://lafiestaexpress.s3.us-east-2.amazonaws.com/bannerPhotos/logophoto.png" },
   { image_url: "https://lafiestaexpress.s3.us-east-2.amazonaws.com/bannerPhotos/outsidetaco.jpeg" },
   { image_url: "https://lafiestaexpress.s3.us-east-2.amazonaws.com/bannerPhotos/titoAva.jpeg" },
