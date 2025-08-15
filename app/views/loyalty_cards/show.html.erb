@@ -1,0 +1,19 @@
+<%= stylesheet_link_tag 'loyalty_card', media: 'all' %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="text-center mb-4">
+        <h1 class="display-4 text-primary">My Loyalty Card</h1>
+        <p class="lead text-muted">Collect punches and earn rewards!</p>
+      </div>
+      
+      <%= render 'card', loyalty_card: @loyalty_card %>
+      <%= render 'status', loyalty_card: @loyalty_card %>
+      <%= render 'controls', loyalty_card: @loyalty_card %>
+      <%= render 'progress', loyalty_card: @loyalty_card %>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag 'loyalty_card' %>

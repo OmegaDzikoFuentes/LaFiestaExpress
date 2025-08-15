@@ -1,0 +1,194 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
+ * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
+ * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
+ * depending on specificity.
+ *
+ * Consider organizing styles into separate files for maintainability.
+ */
+
+ .hero-slide {
+    height: 100vh; /* Adjust as needed */
+    min-height: 500px;
+    max-height: 800px;
+  }
+  
+  .carousel-item {
+    transition: transform 0.6s ease-in-out;
+  }
+
+  /*
+ *= require_self
+ *= require_tree .
+ */
+
+/* === Color Palette ===
+Primary Orange: #FF7F00
+Secondary Red: #D72638
+Accent Green: #118C4F
+Highlight Yellow: #FFD100
+Dark Gray: #2E2E2E
+Light Gray: #F4F4F4
+*/
+
+:root {
+    --color-primary: #FF7F00;    /* Main orange (roof) */
+    --color-secondary: #D72638;  /* Red (accents & EXPRESS text) */
+    --color-accent: #118C4F;     /* Green (Fresh Mexican Food text) */
+    --color-highlight: #FFD100;  /* Yellow (background behind 'Fresh Mexican Food') */
+    --color-dark: #2E2E2E;       /* For dark text and footers */
+    --color-light: #F4F4F4;      /* For background fills */
+  }
+  
+  /* ===== Base Styles ===== */
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--color-dark);
+    background-color: var(--color-primary);
+    margin: 0;
+    padding: 0;
+  }
+  
+  a {
+    color: var(--color-secondary);
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  
+  /* ===== Header ===== */
+  header {
+    background-color: var(--color-primary);
+    color: #fff;
+    padding: 1rem 2rem;
+  }
+  
+  header h1, header h2 {
+    margin: 0;
+    font-weight: 700;
+  }
+  
+  /* ===== Navigation ===== */
+  .navbar {
+    background-color: var(--color-primary);
+  }
+  
+  .navbar a {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+  
+  .navbar a:hover {
+    color: var(--color-highlight);
+  }
+  
+  /* ===== Hero Section ===== */
+  .hero-slide {
+    height: 100vh;
+    min-height: 500px;
+    max-height: 800px;
+    background: linear-gradient(to right, var(--color-primary), var(--color-highlight));
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .hero-slide h1 {
+    font-size: 3rem;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+  }
+  
+  .hero-slide p {
+    font-size: 1.25rem;
+  }
+  
+  /* ===== Buttons ===== */
+  .btn-primary {
+    background-color: var(--color-secondary);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--color-accent);
+  }
+  
+  .btn-accent {
+    background-color: var(--color-accent);
+    color: #fff;
+  }
+  
+  .btn-accent:hover {
+    background-color: var(--color-secondary);
+  }
+  
+  /* ===== Carousel ===== */
+  .carousel-item {
+    transition: transform 0.6s ease-in-out;
+  }
+  
+  .carousel-indicators button {
+    background-color: var(--color-highlight);
+  }
+  
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+  }
+  
+  /* ===== Cards or Menus ===== */
+  .card {
+    background-color: #fff;
+    border: 2px solid var(--color-primary);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .card h3 {
+    color: var(--color-secondary);
+  }
+  
+  /* ===== Footer ===== */
+  footer {
+    background-color: var(--color-secondary);
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  footer a {
+    color: var(--color-highlight);
+  }
+  
+  footer a:hover {
+    color: #fff;
+  }
+  
+  /* ===== Utility Classes ===== */
+  .text-primary { color: var(--color-primary) !important; }
+  .text-secondary { color: var(--color-secondary) !important; }
+  .text-accent { color: var(--color-accent) !important; }
+  .bg-primary { background-color: var(--color-primary) !important; }
+  .bg-secondary { background-color: var(--color-secondary) !important; }
+  .bg-accent { background-color: var(--color-accent) !important; }
+
+  .group:hover .group-hover\:opacity-100 {
+    opacity: 1 !important;
+  }
+  
+  .group:hover .group-hover\:visible {
+    visibility: visible !important;
+  }
+  

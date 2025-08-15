@@ -1,0 +1,307 @@
+<!-- Add Bootstrap CSS if not already included -->
+<%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" %>
+
+<!-- Add Bootstrap JS -->
+<%= javascript_include_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" %>
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Hero Carousel Section -->
+  <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+      <% @banner_photos.each_with_index do |_, index| %>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="<%= index %>" <%= 'class="active" aria-current="true"'.html_safe if index == 0 %> aria-label="Slide <%= index + 1 %>"></button>
+      <% end %>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="<%= @banner_photos.length %>" aria-label="Slide <%= @banner_photos.length + 1 %>"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="<%= @banner_photos.length + 1 %>" aria-label="Slide <%= @banner_photos.length + 2 %>"></button>
+    </div>
+
+    <div class="carousel-inner">
+      <!-- Banner photo slides first -->
+      <% @banner_photos.each_with_index do |banner, index| %>
+        <div class="carousel-item <%= 'active' if index == 0 %>">
+          <div class="hero-slide relative overflow-hidden text-white">
+            <div class="absolute inset-0">
+              <% if banner.image_url.present? %>
+                <%= image_tag banner.image_url, 
+                    alt: "Restaurant banner photo", 
+                    class: "w-full h-full object-cover", 
+                    style: "filter: brightness(0.8);" %>
+              <% else %>
+                <div class="w-full h-full bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400"></div>
+              <% end %>
+              <div class="absolute inset-0 bg-black opacity-30"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 text-center relative z-10 h-full flex flex-col justify-center">
+              <div class="mb-6 md:mb-8">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 md:mb-6 text-shadow-lg"><%= @restaurant_info&.name || "¡La Fiesta Express!" %></h1>
+                <p class="text-xl md:text-2xl mb-2 font-light">Authentic Flavors of Mexico</p>
+                <p class="text-base md:text-lg mb-6 md:mb-8 opacity-90">Right here at home in <%= @restaurant_info&.city || "Troy" %>, <%= @restaurant_info&.state || "Ohio" %></p>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <% if user_signed_in? %>
+                  <%= link_to "Start Ordering", new_order_path, class: "bg-white text-red-600 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1" %>
+                <% else %>
+                  <%= link_to "Sign Up to Order", new_user_registration_path, class: "bg-white text-red-600 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1" %>
+                <% end %>
+
+                <div class="text-white text-center sm:text-left">
+                  <p class="font-semibold">Call for Pickup:</p>
+                  <p class="text-lg md:text-xl font-bold"><%= @restaurant_info&.phone || '937-703-1371' %></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="absolute bottom-0 left-0 right-0 h-6 md:h-8 bg-gradient-to-r from-green-600 via-white to-red-600 opacity-20"></div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Restaurant Welcome slide (fallback if no banner photos) -->
+      <% if @banner_photos.empty? %>
+        <div class="carousel-item active">
+          <div class="hero-slide bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 text-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-black opacity-20"></div>
+            <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
+              <div class="mb-6 md:mb-8">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 md:mb-6 text-shadow-lg"><%= @restaurant_info&.name || "¡La Fiesta Express!" %></h1>
+                <p class="text-xl md:text-2xl mb-2 font-light">Authentic Flavors of Mexico</p>
+                <p class="text-base md:text-lg mb-6 md:mb-8 opacity-90">Right here at home in <%= @restaurant_info&.city || "Troy" %>, <%= @restaurant_info&.state || "Ohio" %></p>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <% if user_signed_in? %>
+                  <%= link_to "Start Ordering", new_order_path, class: "bg-white text-red-600 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1" %>
+                <% else %>
+                  <%= link_to "Sign Up to Order", new_user_registration_path, class: "bg-white text-red-600 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1" %>
+                <% end %>
+
+                <div class="text-white text-center sm:text-left">
+                  <p class="font-semibold">Call for Pickup:</p>
+                  <p class="text-lg md:text-xl font-bold"><%= @restaurant_info&.phone || '937-703-1371' %></p>
+                </div>
+              </div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 h-6 md:h-8 bg-gradient-to-r from-green-600 via-white to-red-600 opacity-20"></div>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Fresh Ingredients slide -->
+      <div class="carousel-item">
+        <div class="hero-slide bg-gradient-to-r from-orange-600 via-yellow-500 to-red-400 text-white py-20 relative overflow-hidden">
+          <div class="absolute inset-0 bg-black opacity-20"></div>
+          <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
+            <div class="mb-8">
+              <i class="fas fa-leaf text-6xl mb-6 text-shadow-lg"></i>
+              <h2 class="text-6xl font-bold mb-6 text-shadow-lg">Fresh Ingredients</h2>
+              <p class="text-2xl mb-2 font-light">Locally sourced for the best flavor</p>
+              <p class="text-lg mb-8 opacity-90">Quality you can taste in every bite</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <%= link_to "View Our Menu", categories_path, class: "bg-white text-orange-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1" %>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Order Online slide -->
+      <div class="carousel-item">
+        <div class="hero-slide bg-gradient-to-r from-yellow-500 via-orange-400 to-white text-gray-800 py-20 relative overflow-hidden">
+          <div class="absolute inset-0 bg-black opacity-10"></div>
+          <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
+            <div class="mb-8">
+              <i class="fas fa-shopping-cart text-6xl mb-6 text-red-600 drop-shadow-lg"></i>
+              <h2 class="text-6xl font-bold mb-6 text-red-600 drop-shadow-lg">Order Online</h2>
+              <p class="text-2xl mb-2 font-light text-gray-700">Fast, easy, and convenient</p>
+              <p class="text-lg mb-8 opacity-90 text-gray-600">Skip the wait, order ahead</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <% if user_signed_in? %>
+                <%= link_to "Start Your Order", new_order_path, class: "bg-red-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-red-700 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1" %>
+              <% else %>
+                <%= link_to "Sign Up to Order", new_user_registration_path, class: "bg-red-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-red-700 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1" %>
+              <% end %>
+              
+              <a href="tel:<%= @restaurant_info&.phone || '937-703-1371' %>" class="border-2 border-red-600 text-red-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-red-600 hover:text-white transition-all duration-300">
+                Call for Pickup
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <!-- Initialize the carousel -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new bootstrap.Carousel(document.getElementById('heroCarousel'), {
+        interval: 5000,
+        wrap: true
+      });
+    });
+  </script>
+
+  <!-- Restaurant Info Section -->
+  <section class="py-8 bg-white border-b">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div class="flex items-center justify-center">
+          <i class="fas fa-map-marker-alt text-red-600 text-2xl mr-3"></i>
+          <div>
+            <p class="font-semibold text-gray-800">Location</p>
+            <p class="text-gray-600">
+              <% if @restaurant_info %>
+                <%= @restaurant_info.street %>, <%= @restaurant_info.city %>, <%= @restaurant_info.state %> <%= @restaurant_info.zip_code %>
+              <% else %>
+                1133 West Main Street, Troy, OH
+              <% end %>
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-center">
+          <i class="fas fa-clock text-red-600 text-2xl mr-3"></i>
+          <div>
+            <p class="font-semibold text-gray-800">Hours Today</p>
+            <p class="text-gray-600">
+              <% if @restaurant_info %>
+                <% 
+                  today = Date.current.strftime("%A").downcase
+                  hours_method = "#{today}_hours"
+                  todays_hours = @restaurant_info.respond_to?(hours_method) ? @restaurant_info.send(hours_method) : nil
+                %>
+                <%= todays_hours || "Call for hours" %>
+              <% else %>
+                11:00 AM – 9:30 PM
+              <% end %>
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-center">
+          <i class="fas fa-phone text-red-600 text-2xl mr-3"></i>
+          <div>
+            <p class="font-semibold text-gray-800">Call Us</p>
+            <p class="text-gray-600"><%= @restaurant_info&.phone || "937-703-1371" %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-5xl font-bold text-gray-800 mb-4">Our Menu</h2>
+        <p class="text-gray-600 text-xl">Discover authentic Mexican flavors</p>
+        <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto mt-4 rounded-full"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <% @categories.each do |category| %>
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
+            <% if category.image_url.present? %>
+              <div class="h-48 bg-cover bg-center relative overflow-hidden" style="background-image: url('<%= category.image_url %>')">
+                <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                  <%= category.menu_items_count %> items
+                </div>
+              </div>
+            <% else %>
+              <div class="h-48 bg-gradient-to-br from-red-400 via-orange-500 to-yellow-400 flex items-center justify-center relative overflow-hidden group-hover:from-red-500 group-hover:to-yellow-500 transition-all duration-300">
+                <i class="fas fa-utensils text-5xl text-white drop-shadow-lg"></i>
+                <div class="absolute top-4 right-4 bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                  <%= category.menu_items.count %> items
+                </div>
+              </div>
+            <% end %>
+            
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2 text-gray-800 group-hover:text-red-600 transition-colors">
+                <%= category.name %>
+              </h3>
+              <% if category.description.present? %>
+                <p class="text-gray-600 mb-4 line-clamp-2"><%= category.description %></p>
+              <% end %>
+              
+              <%= link_to category_path(category), class: "inline-flex items-center text-red-600 hover:text-red-700 font-semibold text-sm uppercase tracking-wide transition-colors group" do %>
+                <span class="group-hover:mr-2 transition-all">View Items</span>
+                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if current_user&.admin? %>
+  <div class="text-center mt-12">
+    <%= link_to new_category_path, class: "bg-red-600 text-white px-8 py-4 rounded-full hover:bg-red-700 transition-colors font-semibold inline-flex items-center" do %>
+      <i class="fas fa-plus mr-2"></i>
+      Add New Category
+    <% end %>
+  </div>
+<% end %>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section class="py-16 bg-gradient-to-r from-red-600 to-orange-500 text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold mb-4">Ready to Order?</h2>
+      <p class="text-xl mb-8 opacity-90">Experience the authentic taste of Mexico today!</p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <% if user_signed_in? %>
+          <%= link_to "Start Your Order", new_order_path, class: "bg-white text-red-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1" %>
+        <% else %>
+          <%= link_to "Sign Up to Order", new_user_registration_path, class: "bg-white text-red-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1" %>
+        <% end %>
+        
+        <a href="tel:<%= @restaurant_info&.phone || '937-703-1371' %>" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-red-600 transition-all duration-300">
+          Call for Pickup
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Custom CSS for text shadow and line clamping -->
+<style>
+  .text-shadow-lg {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .hero-slide {
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .carousel-item {
+    transition: transform 0.6s ease-in-out;
+  }
+</style>

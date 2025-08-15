@@ -1,0 +1,133 @@
+<div class="min-h-screen">
+  <!-- Hero Section -->
+  <section class="bg-mexican text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <% if @restaurant_info.logo_url.present? %>
+        <img src="<%= @restaurant_info.logo_url %>" alt="<%= @restaurant_info.name %>" class="mx-auto mb-6 h-24">
+      <% else %>
+        <i class="fas fa-pepper-hot text-6xl mb-6"></i>
+      <% end %>
+      <h1 class="text-5xl font-bold mb-4"><%= @restaurant_info.name || "El Sabor Mexicano" %></h1>
+      <p class="text-xl">Authentic Mexican Cuisine Since 2020</p>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- About Us -->
+      <div>
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">About Us</h2>
+        <div class="prose prose-lg text-gray-600">
+          <p class="mb-4">
+            Welcome to La Fiesta Express, where we bring the authentic taste of Mexico to your table. 
+            Our family recipes use only the freshest ingredients and traditional cooking methods.
+          </p>
+          <p class="mb-4">
+            From our tortillas to our slow-cooked carnitas, every dish is prepared with 
+            love and attention to detail. We believe that great food brings people together, and 
+            we are honored to be part of your special moments.
+          </p>
+          <p>
+            ¡Bienvenidos a nuestra familia! Come experience the flavors of Mexico with us.
+          </p>
+        </div>
+      </div>
+
+      <!-- Contact & Hours -->
+      <div>
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Visit Us</h2>
+        
+        <!-- Location -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-map-marker-alt text-mexican mr-3"></i>
+            Location
+          </h3>
+          <div class="text-gray-600">
+            <% if @restaurant_info.street.present? %>
+              <p><%= @restaurant_info.street %></p>
+              <p>
+                <%= @restaurant_info.city %><%= ", " if @restaurant_info.city.present? %>
+                <%= @restaurant_info.state %> <%= @restaurant_info.zip_code %>
+              </p>
+            <% else %>
+              <p>123 Main Street</p>
+              <p>Austin, TX 78701</p>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-phone text-mexican mr-3"></i>
+            Contact
+          </h3>
+          <div class="text-gray-600 space-y-2">
+            <p>
+              <i class="fas fa-phone mr-2"></i>
+              <%= @restaurant_info.phone || "(555) 123-4567" %>
+            </p>
+            <p>
+              <i class="fas fa-envelope mr-2"></i>
+              <%= @restaurant_info.email || "info@elsabormexicano.com" %>
+            </p>
+          </div>
+        </div>
+
+        <!-- Hours -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-clock text-mexican mr-3"></i>
+            Hours
+          </h3>
+          <div class="text-gray-600 space-y-2">
+            <div class="flex justify-between">
+              <span>Monday:</span>
+              <span><%= @restaurant_info.monday_hours || "11:00 AM - 10:00 PM" %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>Tuesday:</span>
+              <span><%= @restaurant_info.tuesday_hours || "11:00 AM - 10:00 PM" %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>Wednesday:</span>
+              <span><%= @restaurant_info.wednesday_hours || "11:00 AM - 10:00 PM" %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>Thursday:</span>
+              <span><%= @restaurant_info.thursday_hours || "11:00 AM - 10:00 PM" %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>Friday:</span>
+              <span><%= @restaurant_info.friday_hours || "11:00 AM - 11:00 PM" %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>Saturday:</span>
+              <span><%= @restaurant_info.saturday_hours || "11:00 AM - 11:00 PM" %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>Sunday:</span>
+              <span><%= @restaurant_info.sunday_hours || "12:00 PM - 9:00 PM" %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-16">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6">Ready to Order?</h2>
+      <p class="text-gray-600 mb-8 text-lg">Browse our delicious menu and place your order for pickup</p>
+      <%= link_to "View Menu", categories_path, 
+          class: "bg-mexican text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-colors" %>
+    </div>
+
+    <% if current_user&.admin? %>
+      <div class="text-center mt-8">
+        <%= link_to "Edit Restaurant Info", edit_restaurant_info_path, 
+            class: "text-mexican hover:underline font-medium" %>
+      </div>
+    <% end %>
+  </div>
+</div>

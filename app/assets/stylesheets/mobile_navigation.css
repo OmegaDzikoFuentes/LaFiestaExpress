@@ -1,0 +1,277 @@
+/* app/assets/stylesheets/mobile_navigation.css */
+
+/* Base navigation styles */
+.bg-mexican {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  }
+  
+  .text-mexican {
+    color: #ff6b35;
+  }
+  
+  .hover-mexican:hover {
+    background-color: #ff6b35;
+    color: white;
+  }
+  
+  /* Desktop navigation styles */
+  .nav-link {
+    position: relative;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    color: #ff6b35;
+    transform: translateY(-1px);
+  }
+  
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 50%;
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+  
+  .nav-link:hover::after {
+    width: 100%;
+  }
+  
+  .logo-image {
+    background: transparent !important;
+    mix-blend-mode: multiply;
+  }
+  
+  /* Mobile-specific styles */
+  @media (max-width: 768px) {
+    /* Mobile menu button */
+    .mobile-menu-button {
+      position: relative;
+      z-index: 60;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+  
+    .mobile-menu-button:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  
+    .mobile-menu-button.active {
+      background-color: rgba(255, 107, 53, 0.1);
+    }
+  
+    .mobile-menu-button i {
+      transition: transform 0.3s ease;
+    }
+  
+    .mobile-menu-button.active i {
+      transform: rotate(90deg);
+    }
+  
+    /* Mobile menu overlay */
+    .mobile-menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 45;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+  
+    .mobile-menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+  
+    /* Mobile menu container */
+    .mobile-menu {
+      position: fixed;
+      top: 64px; /* Height of navbar */
+      left: 0;
+      right: 0;
+      max-height: calc(100vh - 64px);
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      z-index: 50;
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow-y: auto;
+    }
+  
+    .mobile-menu.active {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+  
+    /* Mobile menu content */
+    .mobile-menu-content {
+      padding: 1rem;
+      max-width: 100%;
+    }
+  
+    /* Mobile menu links */
+    .mobile-menu-link {
+      display: block;
+      padding: 12px 0;
+      color: #374151;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      border-bottom: 1px solid #f3f4f6;
+    }
+  
+    .mobile-menu-link:hover {
+      color: #ff6b35;
+    }
+  
+    .mobile-menu-link:last-child {
+      border-bottom: none;
+    }
+  
+    /* User section in mobile menu */
+    .mobile-user-section {
+      border-top: 1px solid #e5e7eb;
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+  
+    .mobile-user-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 8px 0;
+    }
+  
+    .mobile-user-info i {
+      color: #ff6b35;
+      font-size: 1.125rem;
+      margin-right: 8px;
+    }
+  
+    .mobile-user-info span {
+      font-weight: 500;
+      color: #1f2937;
+    }
+  
+    /* Mobile menu user links */
+    .mobile-user-link {
+      display: block;
+      padding: 12px 0 12px 16px;
+      color: #374151;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      border-bottom: 1px solid #f9fafb;
+    }
+  
+    .mobile-user-link:hover {
+      color: #ff6b35;
+    }
+  
+    .mobile-user-link i {
+      margin-right: 8px;
+      width: 16px;
+      text-align: center;
+    }
+  
+    /* Cart badge in mobile */
+    .mobile-cart-badge {
+      background: #ff6b35;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 9999px;
+      padding: 2px 6px;
+      margin-left: 8px;
+      font-weight: 600;
+    }
+  
+    /* Mobile login button */
+    .mobile-login-section {
+      border-top: 1px solid #e5e7eb;
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+  
+    .mobile-login-button {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+  
+    .mobile-login-button:hover {
+      background: linear-gradient(135deg, #e55a2b 0%, #e8861a 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    }
+  
+    /* Logout button styling */
+    .mobile-logout-button {
+      display: block;
+      width: 100%;
+      padding: 12px 0 12px 16px;
+      color: #dc2626;
+      text-align: left;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 8px;
+      padding-top: 16px;
+    }
+  
+    .mobile-logout-button:hover {
+      color: #b91c1c;
+    }
+  
+    .mobile-logout-button i {
+      margin-right: 8px;
+      width: 16px;
+      text-align: center;
+    }
+  
+    /* Prevent body scroll when menu is open */
+    body.mobile-menu-open {
+      overflow: hidden;
+    }
+  
+    /* Hide desktop dropdown on mobile */
+    .desktop-user-dropdown {
+      display: none !important;
+    }
+  
+    /* Ensure proper stacking */
+    .navbar {
+      position: relative;
+      z-index: 55;
+    }
+  }
+  
+  /* Desktop styles - hide mobile menu elements */
+  @media (min-width: 769px) {
+    .mobile-menu,
+    .mobile-menu-overlay,
+    .mobile-menu-button {
+      display: none !important;
+    }
+  }

@@ -1,0 +1,101 @@
+<div class="min-h-screen py-8">
+  <div class="max-w-4xl mx-auto px-4">
+    <!-- Breadcrumb -->
+    <nav class="mb-8">
+      <%= link_to "Menu", categories_path, class: "text-mexican hover:underline" %> 
+      <span class="text-gray-500 mx-2">/</span>
+      <%= link_to @menu_item.category.name, category_path(@menu_item.category), class: "text-mexican hover:underline" %>
+      <span class="text-gray-500 mx-2">/</span>
+      <span class="text-gray-700"><%= @menu_item.name %></span>
+    </nav>
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="md:flex">
+        <!-- Image -->
+        <div class="md:w-1/2">
+          <% if @menu_item.image_url.present? %>
+            <img src="<%= @menu_item.image_url %>" alt="<%= @menu_item.name %>" class="w-full h-64 md:h-full object-cover">
+          <% else %>
+            <div class="w-full h-64 md:h-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
+              <i class="fas fa-pepper-hot text-6xl text-white"></i>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Content -->
+        <div class="md:w-1/2 p-8">
+          <h1 class="text-3xl font-bold text-gray-800 mb-4"><%= @menu_item.name %></h1>
+          
+          <% if @menu_item.description.present? %>
+            <p class="text-gray-600 mb-6 leading-relaxed"><%= @menu_item.description %></p>
+          <% end %>
+
+          <div class="mb-6">
+            <span class="text-3xl font-bold text-mexican">$<%= sprintf("%.2f", @menu_item.price) %></span>
+          </div>
+
+          <% if user_signed_in? %>
+            <%= form_with url: order_items_path, method: :post, local: true, class: "space-y-6" do |f| %>
+              <%= f.hidden_field :menu_item_id, value: @menu_item.id %>
+              
+              <!-- Quantity -->
+              <div>
+                <label class="block text-gray-700 font-medium mb-2">Quantity</label>
+                <%= f.number_field :quantity, value: 1, min: 1, max: 10, 
+                    class: "w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican" %>
+              </div>
+
+              <!-- Customizations -->
+              <% if @customizations.any? %>
+                <div>
+                  <label class="block text-gray-700 font-medium mb-2">Customizations</label>
+                  <div class="space-y-2">
+                    <% @customizations.each do |customization| %>
+                      <label class="flex items-center">
+                        <%= check_box_tag "customizations[#{customization.id}]", "1", customization.is_default, 
+                            class: "mr-3 h-4 w-4 text-mexican focus:ring-mexican border-gray-300 rounded" %>
+                        <span class="text-gray-700">
+                          <%= customization.name %>
+                          <% if customization.price_adjustment != 0 %>
+                            <span class="text-sm text-gray-500">
+                              (<%= customization.price_adjustment > 0 ? "+" : "" %>$<%= sprintf("%.2f", customization.price_adjustment) %>)
+                            </span>
+                          <% end %>
+                        </span>
+                      </label>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+
+              <!-- Special Requests -->
+              <div>
+                <label class="block text-gray-700 font-medium mb-2">Special Requests</label>
+                <%= f.text_area :special_request, rows: 3, 
+                    placeholder: "Any special instructions for this item...",
+                    class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mexican" %>
+              </div>
+
+              <%= f.submit "Add to Cart", class: "w-full bg-mexican text-white py-3 px-6 rounded-lg font-semibold hover:bg-orange-600 transition-colors" %>
+            <% end %>
+          <% else %>
+            <div class="bg-gray-100 p-4 rounded-lg text-center">
+              <p class="text-gray-600 mb-4">Please log in to add items to your cart</p>
+              <%= link_to "Login", login_path, class: "bg-mexican text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors" %>
+            </div>
+          <% end %>
+
+          <% if current_user&.admin? %>
+            <div class="flex space-x-4 mt-6 pt-6 border-t">
+              <%= link_to "Edit Item", edit_menu_item_path(@menu_item), 
+                  class: "text-blue-600 hover:text-blue-800 font-medium" %>
+              <%= link_to "Delete Item", menu_item_path(@menu_item), method: :delete, 
+                  data: { confirm: "Are you sure?" }, 
+                  class: "text-red-600 hover:text-red-800 font-medium" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
