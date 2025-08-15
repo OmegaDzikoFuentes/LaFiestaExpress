@@ -9,8 +9,8 @@ class User < ApplicationRecord
 
   validates :first_name, presence: true, length: { maximum: 25 }
   validates :last_name, presence: true, length: { maximum: 25 }
-  validates :username, 
-            presence: true, 
+  validates :username,
+            presence: true,
             uniqueness: true,
             length: { maximum: 25 }
   validates :email,
@@ -32,7 +32,7 @@ class User < ApplicationRecord
   after_create :create_initial_loyalty_card, unless: :loyalty_cards_exists?
 
   # PUBLIC METHODS - These can be called from views, controllers, and other models
-  
+
   def admin?
     admin
   end
@@ -52,7 +52,7 @@ class User < ApplicationRecord
   end
 
   def current_order
-    orders.find_by(status: 'cart')
+    orders.find_by(status: "cart")
   end
 
   def generate_password_reset_token!
@@ -85,11 +85,11 @@ class User < ApplicationRecord
   def password_present?
     password.present?
   end
-  
+
   def loyalty_cards_exists?
     loyalty_cards.any?
   end
-  
+
   def create_initial_loyalty_card
     loyalty_cards.create!(
       punches_count: 0,

@@ -9,11 +9,11 @@ class CreateReceiptUploads < ActiveRecord::Migration[8.0]
       t.references :approved_by, null: true, foreign_key: { to_table: :users }
       t.decimal :receipt_total, precision: 10, scale: 2
       t.date :receipt_date
-      
+
       t.timestamps
     end
-    
-    add_index :receipt_uploads, [:user_id, :status]
+
+    add_index :receipt_uploads, [ :user_id, :status ]
     add_index :receipt_uploads, :status
   end
 end

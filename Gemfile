@@ -17,7 +17,7 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
-gem 'rack-attack', '~> 6.7'
+gem "rack-attack", "~> 6.7"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
@@ -70,7 +70,7 @@ group :development, :test do
   # Bullet for N+1 query detection
   gem "bullet"
 
-  gem 'dotenv-rails'
+  gem "dotenv-rails"
 end
 
 group :development do

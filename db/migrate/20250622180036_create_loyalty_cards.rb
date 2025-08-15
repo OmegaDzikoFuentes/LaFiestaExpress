@@ -10,8 +10,8 @@ class CreateLoyaltyCards < ActiveRecord::Migration[8.0]
       t.datetime :redeemed_at
       t.timestamps
     end
-    
-    add_index :loyalty_cards, [:user_id, :is_completed]
-    add_index :loyalty_cards, [:user_id, :is_redeemed]
+
+    add_index :loyalty_cards, [ :user_id, :is_completed ]
+    add_index :loyalty_cards, [ :user_id, :is_redeemed ]
   end
 end

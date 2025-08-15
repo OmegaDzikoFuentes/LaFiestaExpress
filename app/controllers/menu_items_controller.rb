@@ -1,14 +1,14 @@
 class MenuItemsController < ApplicationController
-  before_action :authorize_admin!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_menu_item, only: [:show, :edit, :update, :destroy]
-  before_action :set_categories, only: [:new, :create, :edit, :update]
+  before_action :authorize_admin!, only: [ :new, :create, :edit, :update, :destroy ]
+  before_action :set_menu_item, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_categories, only: [ :new, :create, :edit, :update ]
 
   def index
     @menu_items = if params[:category_id]
                     Category.find(params[:category_id]).menu_items.where(available: true).order(:name)
-                  else
-                    MenuItem.where(available: true).includes(:category).order('categories.name', :name)
-                  end
+    else
+                    MenuItem.where(available: true).includes(:category).order("categories.name", :name)
+    end
   end
 
   def show

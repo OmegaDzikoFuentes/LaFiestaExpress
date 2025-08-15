@@ -1,5 +1,4 @@
 class MenuItem < ApplicationRecord
-
     belongs_to :category, counter_cache: true
 
     has_many :customizations, dependent: :destroy

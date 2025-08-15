@@ -11,11 +11,11 @@ class Order < ApplicationRecord
 
   # Status constants
   STATUSES = %w[cart placed preparing ready completed cancelled].freeze
-  
+
   validates :status, inclusion: { in: STATUSES }
 
-  scope :completed, -> { where(status: 'completed') }
-  scope :active, -> { where.not(status: ['completed', 'cancelled']) }
+  scope :completed, -> { where(status: "completed") }
+  scope :active, -> { where.not(status: [ "completed", "cancelled" ]) }
 
   def total_items
     order_items.sum(:quantity)
@@ -42,7 +42,7 @@ class Order < ApplicationRecord
   end
 
   def can_add_loyalty_punch?
-    status == 'completed' && loyalty_punches.empty?
+    status == "completed" && loyalty_punches.empty?
   end
 
   after_update :send_status_notification, if: :status_changed?

@@ -49,10 +49,10 @@ class ApplicationController < ActionController::Base
 
   def set_current_order
     return unless current_user
-    
-    @current_order = current_user.orders.find_by(status: 'cart') || 
+
+    @current_order = current_user.orders.find_by(status: "cart") ||
                      current_user.orders.create!(
-                       status: 'cart',
+                       status: "cart",
                        order_date: Time.current
                      )
   end

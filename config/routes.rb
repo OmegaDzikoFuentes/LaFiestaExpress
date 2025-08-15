@@ -22,27 +22,27 @@ Rails.application.routes.draw do
   post "/signup", to: "users#create"
 
   # User management routes
-  resources :users, only: [:edit, :update, :destroy]
+  resources :users, only: [ :edit, :update, :destroy ]
 
   # For search functionality
-  get '/search', to: 'menu_items#search'
+  get "/search", to: "menu_items#search"
 
   # For filtering by category
-  get '/menu/:category_slug', to: 'categories#show'
+  get "/menu/:category_slug", to: "categories#show"
 
   # For user profile management
-  resource :profile, only: [:show, :edit, :update]
+  resource :profile, only: [ :show, :edit, :update ]
 
   # For contact/about pages
-  get '/about', to: 'pages#about'
-  get '/contact', to: 'pages#contact'
+  get "/about", to: "pages#about"
+  get "/contact", to: "pages#contact"
 
   resources :categories do
-    resources :menu_items, only: [:index]
+    resources :menu_items, only: [ :index ]
   end
 
   resources :menu_items do
-    resources :customizations, except: [:show]
+    resources :customizations, except: [ :show ]
   end
 
   resources :orders do
@@ -56,49 +56,49 @@ Rails.application.routes.draw do
       get :current
     end
   end
-  
+
   # Order items routes (for AJAX cart operations)
-  resources :order_items, only: [:create, :update, :destroy]
+  resources :order_items, only: [ :create, :update, :destroy ]
 
   # Receipt upload system
-  resources :receipt_uploads, only: [:index, :show, :new, :create, :destroy]
+  resources :receipt_uploads, only: [ :index, :show, :new, :create, :destroy ]
 
   # Loyalty card routes (simplified - removed problematic punch action)
-  resources :loyalty_cards, only: [:index, :show, :create] do
+  resources :loyalty_cards, only: [ :index, :show, :create ] do
     member do
       patch :redeem
     end
-    
+
     collection do
       get :current_card
     end
   end
 
   # Restaurant info routes
-  resource :restaurant_info, only: [:show, :edit, :update]
+  resource :restaurant_info, only: [ :show, :edit, :update ]
 
   # Admin routes - comprehensive admin panel
   namespace :admin do
     # Admin dashboard
-    root 'dashboard#index'
-    get 'dashboard', to: 'dashboard#index'
-    
+    root "dashboard#index"
+    get "dashboard", to: "dashboard#index"
+
     # Core content management
     resources :categories
     resources :menu_items do
       resources :customizations
     end
-    
+
     # Order management
-    resources :orders, only: [:index, :show, :update]
-    
+    resources :orders, only: [ :index, :show, :update ]
+
     # User management
     resources :users do
       member do
         patch :toggle_admin
       end
     end
-    
+
     # Receipt upload management
     resources :receipt_uploads do
       member do
@@ -106,21 +106,21 @@ Rails.application.routes.draw do
         patch :reject
       end
     end
-    
-      # Password reset routes
 
-    resources :password_resets, only: [:new, :create]
-    get 'password_resets/:id/edit', to: 'password_resets#edit', as: :edit_password_reset
-    patch 'password_resets/:id', to: 'password_resets#update', as: :password_reset
+    # Password reset routes
+
+    resources :password_resets, only: [ :new, :create ]
+    get "password_resets/:id/edit", to: "password_resets#edit", as: :edit_password_reset
+    patch "password_resets/:id", to: "password_resets#update", as: :password_reset
 
 
     # Loyalty system management
-    resources :loyalty_cards, only: [:index, :show]
-    resources :loyalty_punches, only: [:index, :show, :destroy]
-    
+    resources :loyalty_cards, only: [ :index, :show ]
+    resources :loyalty_punches, only: [ :index, :show, :destroy ]
+
     # Banner photo management
-    resources :banner_photos, except: [:show]
-    
+    resources :banner_photos, except: [ :show ]
+
     # Restaurant info
     resource :restaurant_info
   end
@@ -128,28 +128,28 @@ Rails.application.routes.draw do
   # API routes (if you plan to add mobile app or API access)
   namespace :api do
     namespace :v1 do
-      resources :categories, only: [:index, :show]
-      resources :menu_items, only: [:index, :show]
-      
-      resources :orders, only: [:create, :show, :update] do
+      resources :categories, only: [ :index, :show ]
+      resources :menu_items, only: [ :index, :show ]
+
+      resources :orders, only: [ :create, :show, :update ] do
         member do
           post :add_loyalty_punch
         end
       end
-      
-      resources :order_items, only: [:create, :update, :destroy]
-      resources :receipt_uploads, only: [:index, :show, :create]
-      
-      resources :loyalty_cards, only: [:index, :show, :create] do
+
+      resources :order_items, only: [ :create, :update, :destroy ]
+      resources :receipt_uploads, only: [ :index, :show, :create ]
+
+      resources :loyalty_cards, only: [ :index, :show, :create ] do
         member do
           patch :redeem
         end
-        
+
         collection do
           get :current_card
         end
       end
-      post 'refresh', to: 'base#refresh' 
+      post "refresh", to: "base#refresh"
     end
   end
 end

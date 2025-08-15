@@ -1,31 +1,31 @@
 module LoyaltyCardsHelper
     def status_class(card)
       if card.redeemed?
-        'status-redeemed'
+        "status-redeemed"
       elsif card.completed?
-        'status-completed'
+        "status-completed"
       else
-        'status-active'
+        "status-active"
       end
     end
-  
+
     def status_icon(card)
       if card.redeemed?
-        'fa-check-circle'
+        "fa-check-circle"
       elsif card.completed?
-        'fa-gift'
+        "fa-gift"
       else
-        'fa-star'
+        "fa-star"
       end
     end
-  
+
     def status_text(card)
       if card.redeemed?
-        'Reward Redeemed - Card Complete!'
+        "Reward Redeemed - Card Complete!"
       elsif card.completed?
-        'Card Complete - Ready to Redeem!'
+        "Card Complete - Ready to Redeem!"
       else
         "Active Card - #{card.punches_count} out of 10 punches"
       end
     end
-  end
+end

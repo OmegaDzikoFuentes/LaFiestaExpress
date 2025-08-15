@@ -8,7 +8,7 @@ class CreateOrderItems < ActiveRecord::Migration[8.0]
       t.float   :item_price,    null: false
       t.string  :item_name,     limit: 100, null: false
       t.string  :special_request, limit: 255
-      
+
 
       t.timestamps
     end

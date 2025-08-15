@@ -5,9 +5,9 @@ class PagesController < ApplicationController
       # For example, if you want to fetch restaurant info:
       @restaurant_info = RestaurantInfo.first
     end
-  
+
     def contact
       # Contact page action if needed
       @restaurant_info = RestaurantInfo.first
     end
-  end
+end

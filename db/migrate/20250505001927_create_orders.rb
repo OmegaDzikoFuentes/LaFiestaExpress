@@ -4,7 +4,7 @@ class CreateOrders < ActiveRecord::Migration[8.0]
       # Foreign Key to users table
       t.references :user, null: false, foreign_key: true
 
-      #order details
+      # order details
       t.datetime :order_date, null: false
       t.string   :status,        limit: 25,  null: false
       t.string   :contact_name,  limit: 25

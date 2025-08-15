@@ -1,5 +1,4 @@
 class OrderItemCustomization < ApplicationRecord
-
     belongs_to :order_item
 
     belongs_to :customization,  optional: true
