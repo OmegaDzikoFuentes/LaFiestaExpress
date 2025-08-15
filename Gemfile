@@ -56,6 +56,9 @@ gem "kaminari"  # Pagination
 gem "pg", "~> 1.5"  # PostgreSQL adapter
 gem "sidekiq"  # Background job processing
 
+  # Tailwind CSS
+  gem "tailwindcss-rails"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -66,8 +69,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  # Tailwind CSS
-  gem "tailwindcss-rails"
+
 
   # Bullet for N+1 query detection
   gem "bullet"
