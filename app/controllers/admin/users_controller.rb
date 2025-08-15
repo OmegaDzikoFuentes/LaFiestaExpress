@@ -65,7 +65,7 @@ class Admin::UsersController < Admin::BaseController
     if @user == current_user
       redirect_to admin_users_path, alert: 'You cannot change your own admin status.'
       return
-    }
+    
     @user.update!(admin: !@user.admin?)
     status = @user.admin? ? 'granted' : 'revoked'
     redirect_to admin_user_path(@user), notice: "Admin access #{status} for #{@user.full_name}."
