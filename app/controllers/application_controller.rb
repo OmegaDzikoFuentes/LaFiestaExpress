@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   before_action :set_current_order, if: :user_signed_in?
   before_action :load_restaurant_info
 
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
   private
 
   def require_user_logged_in
