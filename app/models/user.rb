@@ -1,3 +1,4 @@
+require 'zxcvbn'
 class User < ApplicationRecord
   has_secure_password
   encrypts :api_token, deterministic: true
