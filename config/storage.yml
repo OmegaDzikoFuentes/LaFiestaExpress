@@ -32,6 +32,7 @@ local:
 #   service: Mirror
 #   primary: local
 #   mirrors: [ amazon, google, microsoft ]
+
 development:
   service: Disk
   root: <%= Rails.root.join("storage") %>
@@ -42,21 +43,3 @@ production:
   secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
   region: us-east-1
   bucket: lafiestaexpress
-
-
-# config/storage.yml
- test:
-     service: Disk
-     root: <%= Rails.root.join("tmp/storage") %>
-
-   local:
-     service: Disk
-     root: <%= Rails.root.join("storage") %>
-
-   amazon:
-     service: S3
-     access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
-     secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
-     region: us-east-2
-     bucket: <%= ENV["S3_BUCKET"] %>
-     public: true
