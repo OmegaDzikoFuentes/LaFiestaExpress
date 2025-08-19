@@ -93,7 +93,7 @@
                 </div>
               </div>
             <% else %>
-              <%= link_to "Login", login_path, class: "bg-mexican text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg" %>
+              <%= link_to "Login", login_path, class: "bg-mexican text-black px-6 py-2 rounded-lg hover:bg-orange-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg" %>
             <% end %>
           </div>
 
@@ -111,7 +111,7 @@
         <div class="mobile-menu-content">
           <!-- Main Navigation Links -->
           <%= link_to "Menu", categories_path, class: "mobile-menu-link", onclick: "scrollToMenu(event)" %>
-          <%= link_to "About", restaurant_info_path, class: "mobile-menu-link" %>
+          <%= link_to "About", about_path, class: "mobile-menu-link" %>
           
           <% if user_signed_in? %>
             <!-- User Section -->
@@ -151,7 +151,7 @@
           <% else %>
             <!-- Login Section -->
             <div class="mobile-login-section">
-              <%= link_to "Login", login_path, class: "mobile-login-button" %>
+              <%= link_to "Login", login_path, class: "mobile-login-button text-black" %>
             </div>
           <% end %>
         </div>
